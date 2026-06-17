@@ -1,0 +1,91 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@layer base {
+  :root,
+  .dark {
+    --color-bg-primary: #0B2239;
+    --color-bg-secondary: #193A59;
+    --color-surface: #2A4058;
+    --color-secondary: #4D6A8A;
+    --color-text-muted: #8FA6BD;
+    --color-accent-soft: #D1AFC0;
+    --color-highlight: #E7C7D2;
+    --color-accent: #C084A0;
+    --color-text-primary: #FFFFFF;
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.25);
+    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  .light {
+    --color-bg-primary: #F1F5F9;
+    --color-bg-secondary: #FFFFFF;
+    --color-surface: #FFFFFF;
+    --color-secondary: #CBD5E1;
+    --color-text-muted: #475569;
+    --color-accent-soft: #BE185D;
+    --color-highlight: #9D174D;
+    --color-accent: #7C3AED;
+    --color-text-primary: #0F172A;
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.10);
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary font-sans min-h-dvh transition-colors duration-200;
+  }
+
+  #root {
+    @apply min-h-dvh flex flex-col;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent rounded-sm;
+  }
+}
+
+/* Tabular/monospace data */
+[data-tabular] {
+  @apply font-mono;
+}
+
+/* Screen-reader only */
+.sr-only {
+  @apply absolute w-px h-px p-0 -m-px overflow-hidden whitespace-nowrap border-0;
+  clip: rect(0, 0, 0, 0);
+}
+
+/* Modal animations */
+@keyframes modal-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Reload prompt animation */
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

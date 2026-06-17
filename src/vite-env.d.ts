@@ -1,5 +1,8 @@
 /// <reference types="vite/client" />
 
+// Font module declarations
+declare module '@fontsource/inter';
+
 // PWA virtual module declarations
 declare module 'virtual:pwa-register/react' {
   import type { Dispatch, SetStateAction } from 'react'

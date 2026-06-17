@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
-import './Modal.css';
 
 interface ModalProps {
   open: boolean;
@@ -45,24 +44,24 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 
   return (
     <div
-      className="modal-overlay"
+      className="fixed inset-0 z-[1000] flex items-center justify-center p-6 bg-black/50 backdrop-blur-sm animate-[modal-overlay-in_150ms_ease]"
       ref={overlayRef}
       onClick={handleOverlayClick}
       role="presentation"
     >
       <div
-        className="modal"
+        className="w-full max-w-[520px] max-h-[85vh] flex flex-col bg-surface rounded-2xl shadow-elevated animate-[modal-in_150ms_ease]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
-        <header className="modal__header">
-          <h2 id="modal-title" className="modal__title">
+        <header className="flex items-center justify-between p-6 border-b border-secondary/50">
+          <h2 id="modal-title" className="text-lg font-semibold text-text-primary m-0">
             {title}
           </h2>
           <button
             type="button"
-            className="modal__close"
+            className="flex items-center justify-center w-8 h-8 rounded-xl text-text-muted cursor-pointer transition-all duration-150 hover:bg-bg-secondary hover:text-text-primary"
             onClick={onClose}
             aria-label="Cerrar modal"
           >
@@ -82,7 +81,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
             </svg>
           </button>
         </header>
-        <div className="modal__body">{children}</div>
+        <div className="p-6 overflow-y-auto">{children}</div>
       </div>
     </div>
   );

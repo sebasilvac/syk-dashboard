@@ -1,5 +1,4 @@
 import { diffDays } from '@/lib/computeAlerts';
-import './DueDateIndicator.css';
 
 interface DueDateIndicatorProps {
   dueDate: string;
@@ -21,6 +20,11 @@ export function computeDueDateLevel(dueDate: string, today: Date): DueDateLevel 
   return 'none';
 }
 
+const levelClasses: Record<Exclude<DueDateLevel, 'none'>, string> = {
+  warning: 'text-warning bg-warning-muted',
+  critical: 'text-destructive bg-destructive-muted',
+};
+
 export function DueDateIndicator({ dueDate, today = new Date() }: DueDateIndicatorProps) {
   const level = computeDueDateLevel(dueDate, today);
 
@@ -28,7 +32,7 @@ export function DueDateIndicator({ dueDate, today = new Date() }: DueDateIndicat
 
   return (
     <span
-      className={`due-date-indicator due-date-indicator--${level}`}
+      className={`inline-flex items-center justify-center w-6 h-6 rounded-xl ${levelClasses[level]}`}
       aria-label={level === 'critical' ? 'Pedido atrasado' : 'Pedido por vencer'}
     >
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

@@ -76,6 +76,7 @@ const arbOrder: fc.Arbitrary<Order> = fc.record({
   notes: fc.string({ maxLength: 50 }),
   dueDate: fc.constant('2024-06-01'),
   quotationId: fc.option(fc.uuid(), { nil: undefined }),
+  deposits: fc.constant([]),
   createdAt: fc.constant('2024-01-01T00:00:00Z'),
   updatedAt: fc.constant('2024-01-01T00:00:00Z'),
 });

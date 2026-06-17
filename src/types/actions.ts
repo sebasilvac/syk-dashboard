@@ -1,4 +1,4 @@
-import type { Order, Quotation, Variant } from './models';
+import type { Client, Deposit, Order, Quotation, Variant } from './models';
 
 export type DataAction =
   | { type: 'QUOTATION_CREATE'; payload: Omit<Quotation, 'id' | 'number' | 'createdAt' | 'updatedAt'> }
@@ -10,4 +10,9 @@ export type DataAction =
   | { type: 'ORDER_MARK_DELIVERED'; payload: { id: string } }
   | { type: 'VARIANT_ADD'; payload: { productId: string; variant: Omit<Variant, 'id'> } }
   | { type: 'VARIANT_UPDATE_STOCK'; payload: { productId: string; variantId: string; stock: number } }
-  | { type: 'STOCK_DEDUCT'; payload: { items: Array<{ variantId: string; quantity: number }> } };
+  | { type: 'STOCK_DEDUCT'; payload: { items: Array<{ variantId: string; quantity: number }> } }
+  | { type: 'CLIENT_CREATE'; payload: Omit<Client, 'id'> }
+  | { type: 'CLIENT_UPDATE'; payload: { id: string; changes: Partial<Omit<Client, 'id'>> } }
+  | { type: 'CLIENT_DELETE'; payload: { id: string } }
+  | { type: 'DEPOSIT_ADD'; payload: { orderId: string; deposit: Omit<Deposit, 'id'> } }
+  | { type: 'DEPOSIT_REMOVE'; payload: { orderId: string; depositId: string } };

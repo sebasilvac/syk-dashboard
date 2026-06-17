@@ -1,4 +1,4 @@
-import type { AppData, Client, Order, Product, Quotation, User } from '@/types/models';
+import type { AppData, Client, Deposit, Order, Product, Quotation, User } from '@/types/models';
 
 // === Helper para fechas relativas ===
 function daysFromNow(days: number): string {
@@ -109,6 +109,7 @@ const quotations: Quotation[] = [
     total: 212500,
     status: 'pendiente',
     notes: 'Entrega solicitada para fin de mes.',
+    estimatedDeliveryDate: daysFromNow(14),
     createdAt: daysAgo(5),
     updatedAt: daysAgo(5),
   },
@@ -173,6 +174,7 @@ const orders: Order[] = [
     notes: 'Pedido urgente.',
     dueDate: daysFromNow(1), // Due within 2 days → triggers "due_soon" alert
     quotationId: undefined,
+    deposits: [],
     createdAt: daysAgo(7),
     updatedAt: daysAgo(7),
   },
@@ -190,6 +192,9 @@ const orders: Order[] = [
     notes: 'Fecha de entrega ya pasada — requiere atención.',
     dueDate: daysAgo(3), // Overdue → triggers "overdue" alert
     quotationId: undefined,
+    deposits: [
+      { id: 'dep-1', amount: 50000, method: 'transferencia', date: daysAgo(10) },
+    ] satisfies Deposit[],
     createdAt: daysAgo(14),
     updatedAt: daysAgo(14),
   },
@@ -207,6 +212,10 @@ const orders: Order[] = [
     notes: 'Entregado sin observaciones.',
     dueDate: daysAgo(1),
     quotationId: 'quot-2',
+    deposits: [
+      { id: 'dep-2', amount: 100000, method: 'transferencia', date: daysAgo(18) },
+      { id: 'dep-3', amount: 73000, method: 'efectivo', date: daysAgo(5) },
+    ] satisfies Deposit[],
     createdAt: daysAgo(20),
     updatedAt: daysAgo(1),
   },

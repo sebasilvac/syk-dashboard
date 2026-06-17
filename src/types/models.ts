@@ -52,12 +52,23 @@ export interface Quotation {
   total: number;
   status: QuotationStatus;
   notes: string;
+  estimatedDeliveryDate?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 // === Pedidos ===
 export type OrderStatus = 'activo' | 'entregado';
+
+// === Depósitos (Pagos parciales) ===
+export type PaymentMethod = 'transferencia' | 'efectivo';
+
+export interface Deposit {
+  id: string;
+  amount: number;
+  method: PaymentMethod;
+  date: string;
+}
 
 export interface Order {
   id: string;
@@ -70,6 +81,7 @@ export interface Order {
   notes: string;
   dueDate: string;
   quotationId?: string;
+  deposits: Deposit[];
   createdAt: string;
   updatedAt: string;
 }

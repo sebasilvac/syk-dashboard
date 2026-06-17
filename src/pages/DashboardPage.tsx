@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useDataScope } from '@/hooks/useDataScope';
 import { useAlerts } from '@/lib/AlertContext';
 import { MetricCard } from '@/components/MetricCard';
-import './DashboardPage.css';
 
 export default function DashboardPage() {
   const data = useDataScope();
@@ -35,10 +34,10 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="dashboard">
-      <h1 className="dashboard__title">Dashboard</h1>
+    <div className="p-6 md:p-8">
+      <h1 className="text-2xl font-bold text-text-primary mb-6">Dashboard</h1>
 
-      <section className="dashboard__metrics" aria-label="Métricas principales">
+      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8" aria-label="Métricas principales">
         <MetricCard
           title="Cotizaciones Pendientes"
           value={metrics.cotizacionesPendientes}
@@ -80,26 +79,28 @@ export default function DashboardPage() {
         />
       </section>
 
-      <section className="dashboard__alerts" aria-label="Alertas activas">
-        <h2 className="dashboard__alerts-title">Alertas Activas</h2>
+      <section className="flex flex-col gap-4" aria-label="Alertas activas">
+        <h2 className="text-lg font-semibold text-text-primary">Alertas Activas</h2>
 
         {alerts.length === 0 ? (
-          <p className="dashboard__empty">Sin alertas activas</p>
+          <p className="text-center py-8 text-text-muted text-sm">Sin alertas activas</p>
         ) : (
-          <div className="dashboard__alert-list" role="list">
+          <div className="flex flex-col gap-2" role="list">
             {alerts.map((alert) => (
               <button
                 key={alert.id}
-                className="dashboard__alert-item"
+                className="flex items-center gap-4 px-4 py-3 bg-surface border border-secondary/50 rounded-xl cursor-pointer transition-all duration-150 hover:bg-bg-secondary hover:border-accent"
                 role="listitem"
                 onClick={() => handleAlertClick(alert.resourceType, alert.resourceId)}
               >
                 <span
-                  className={`dashboard__alert-severity dashboard__alert-severity--${alert.severity}`}
+                  className={`w-2.5 h-2.5 rounded-full shrink-0 ${
+                    alert.severity === 'critical' ? 'bg-destructive' : 'bg-warning'
+                  }`}
                   aria-label={alert.severity === 'critical' ? 'Crítica' : 'Advertencia'}
                 />
-                <span className="dashboard__alert-message">{alert.message}</span>
-                <span className="dashboard__alert-arrow" aria-hidden="true">
+                <span className="text-sm text-text-primary flex-1 text-left">{alert.message}</span>
+                <span className="text-text-muted shrink-0" aria-hidden="true">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="9 18 15 12 9 6" />
                   </svg>

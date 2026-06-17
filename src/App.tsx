@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from '@/lib/AuthContext';
 import { DataProvider } from '@/lib/DataContext';
 import { AlertProvider } from '@/lib/AlertContext';
+import { ThemeProvider } from '@/lib/ThemeContext';
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { AppLayout } from '@/components/AppLayout';
 
@@ -16,15 +17,17 @@ const OrderFormPage = lazy(() => import('@/pages/OrderFormPage'));
 const OrderDetailPage = lazy(() => import('@/pages/OrderDetailPage'));
 const InventoryListPage = lazy(() => import('@/pages/InventoryListPage'));
 const InventoryDetailPage = lazy(() => import('@/pages/InventoryDetailPage'));
+const ClientListPage = lazy(() => import('@/pages/ClientListPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 const AccessDeniedPage = lazy(() => import('@/pages/AccessDeniedPage'));
 
 function App() {
   return (
-    <AuthProvider>
-      <DataProvider>
-        <AlertProvider>
-          <BrowserRouter>
+    <ThemeProvider>
+      <AuthProvider>
+        <DataProvider>
+          <AlertProvider>
+            <BrowserRouter>
             <Suspense fallback={<div className="loading">Cargando...</div>}>
               <Routes>
                 <Route path="/" element={<Navigate to="/login" replace />} />
@@ -42,6 +45,7 @@ function App() {
                     <Route path="/pedidos/:id" element={<OrderDetailPage />} />
                     <Route path="/inventario" element={<InventoryListPage />} />
                     <Route path="/inventario/:id" element={<InventoryDetailPage />} />
+                    <Route path="/clientes" element={<ClientListPage />} />
                   </Route>
                 </Route>
 
@@ -52,6 +56,7 @@ function App() {
         </AlertProvider>
       </DataProvider>
     </AuthProvider>
+  </ThemeProvider>
   );
 }
 

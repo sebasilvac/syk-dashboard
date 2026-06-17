@@ -47,6 +47,7 @@ function arbOrder(today: Date): fc.Arbitrary<Order> {
     status: fc.constantFrom('activo' as const, 'entregado' as const),
     notes: fc.constant(''),
     dueDate: arbDueDate,
+    deposits: fc.constant([]),
     createdAt: fc.constant(today.toISOString()),
     updatedAt: fc.constant(today.toISOString()),
   });

@@ -1,31 +1,48 @@
-import './StatusBadge.css';
+export type StatusType = 'active' | 'pending' | 'completed' | 'critical';
 
-type StatusVariant = 'borrador' | 'pendiente' | 'aprobada' | 'rechazada' | 'activo' | 'entregado';
-
-interface StatusBadgeProps {
-  status: string;
-  variant?: StatusVariant;
+export interface StatusBadgeProps {
+  status: StatusType | string;
+  children?: React.ReactNode;
 }
 
-export function StatusBadge({ status, variant }: StatusBadgeProps) {
-  const resolvedVariant = variant ?? inferVariant(status);
+const statusClasses: Record<StatusType, string> = {
+  active: 'bg-success-muted text-success',
+  pending: 'bg-warning-muted text-warning',
+  completed: 'bg-secondary/30 text-text-muted',
+  critical: 'bg-destructive-muted text-destructive',
+};
+
+/**
+ * Maps legacy Spanish status values to the new StatusType.
+ * This ensures backward compatibility until all pages are migrated.
+ */
+function resolveStatus(status: string): StatusType {
+  switch (status) {
+    case 'aprobada':
+    case 'activo':
+      return 'active';
+    case 'pendiente':
+      return 'pending';
+    case 'entregado':
+    case 'borrador':
+      return 'completed';
+    case 'rechazada':
+      return 'critical';
+    default:
+      if (status in statusClasses) return status as StatusType;
+      return 'completed';
+  }
+}
+
+export function StatusBadge({ status, children }: StatusBadgeProps) {
+  const resolved = resolveStatus(status);
+  const colorClasses = statusClasses[resolved];
 
   return (
-    <span className={`status-badge status-badge--${resolvedVariant}`}>
-      {status}
+    <span
+      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClasses}`}
+    >
+      {children ?? status}
     </span>
   );
 }
-
-function inferVariant(status: string): StatusVariant {
-  const lower = status.toLowerCase();
-  if (lower === 'borrador') return 'borrador';
-  if (lower === 'pendiente') return 'pendiente';
-  if (lower === 'aprobada') return 'aprobada';
-  if (lower === 'rechazada') return 'rechazada';
-  if (lower === 'activo') return 'activo';
-  if (lower === 'entregado') return 'entregado';
-  return 'borrador';
-}
-
-export type { StatusBadgeProps, StatusVariant };

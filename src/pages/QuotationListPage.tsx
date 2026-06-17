@@ -10,7 +10,6 @@ import { StatusBadge } from '@/components/StatusBadge';
 import { Button } from '@/components/Button';
 import type { Column } from '@/components/DataTable';
 import type { Quotation } from '@/types/models';
-import './QuotationListPage.css';
 
 const STATUS_OPTIONS = [
   { value: 'borrador', label: 'Borrador' },
@@ -60,7 +59,7 @@ export default function QuotationListPage() {
       key: 'total',
       header: 'Total',
       render: (q) => (
-        <span className="quotation-list__total">
+        <span className="font-mono text-sm whitespace-nowrap">
           ${q.total.toLocaleString('es-CL')}
         </span>
       ),
@@ -72,16 +71,16 @@ export default function QuotationListPage() {
   }
 
   return (
-    <div className="quotation-list">
-      <div className="quotation-list__header">
-        <h1 className="quotation-list__title">Cotizaciones</h1>
+    <div className="p-6 md:p-8">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-col sm:flex-row">
+        <h1 className="text-2xl font-bold text-text-primary">Cotizaciones</h1>
         <Button variant="primary" onClick={() => navigate('/cotizaciones/nueva')}>
           Nueva Cotización
         </Button>
       </div>
 
-      <div className="quotation-list__controls">
-        <div className="quotation-list__search">
+      <div className="flex items-center gap-4 mb-6 flex-wrap flex-col sm:flex-row">
+        <div className="flex-1 min-w-[200px] w-full sm:w-auto">
           <SearchBar
             value={search}
             onChange={setSearch}

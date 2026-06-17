@@ -1,5 +1,3 @@
-import './StatusFilter.css';
-
 interface StatusOption {
   value: string;
   label: string;
@@ -13,10 +11,14 @@ interface StatusFilterProps {
 
 export function StatusFilter({ options, value, onChange }: StatusFilterProps) {
   return (
-    <div className="status-filter" role="group" aria-label="Filtro de estado">
+    <div className="flex flex-wrap gap-1.5 items-center" role="group" aria-label="Filtro de estado">
       <button
         type="button"
-        className={`status-filter__btn ${value === '' ? 'status-filter__btn--active' : ''}`}
+        className={`px-4 py-1.5 font-sans text-[0.8125rem] font-medium rounded-xl border cursor-pointer whitespace-nowrap transition-all duration-150 ${
+          value === ''
+            ? 'text-white bg-accent border-accent'
+            : 'text-text-muted bg-transparent border-secondary hover:text-text-primary hover:border-accent-soft'
+        }`}
         onClick={() => onChange('')}
         aria-pressed={value === ''}
       >
@@ -26,7 +28,11 @@ export function StatusFilter({ options, value, onChange }: StatusFilterProps) {
         <button
           key={option.value}
           type="button"
-          className={`status-filter__btn ${value === option.value ? 'status-filter__btn--active' : ''}`}
+          className={`px-4 py-1.5 font-sans text-[0.8125rem] font-medium rounded-xl border cursor-pointer whitespace-nowrap transition-all duration-150 ${
+            value === option.value
+              ? 'text-white bg-accent border-accent'
+              : 'text-text-muted bg-transparent border-secondary hover:text-text-primary hover:border-accent-soft'
+          }`}
           onClick={() => onChange(option.value)}
           aria-pressed={value === option.value}
         >

@@ -9,7 +9,6 @@ import { DueDateIndicator } from '@/components/DueDateIndicator';
 import { Button } from '@/components/Button';
 import type { Column } from '@/components/DataTable';
 import type { Order } from '@/types/models';
-import './OrderListPage.css';
 
 const STATUS_OPTIONS = [
   { value: 'activo', label: 'Activo' },
@@ -50,7 +49,7 @@ export default function OrderListPage() {
       key: 'dueDate',
       header: 'Fecha Entrega',
       render: (o) => (
-        <span className="order-list__due-cell">
+        <span className="flex items-center gap-1">
           {new Date(o.dueDate).toLocaleDateString('es-CL')}
           {o.status === 'activo' && <DueDateIndicator dueDate={o.dueDate} />}
         </span>
@@ -65,7 +64,7 @@ export default function OrderListPage() {
       key: 'total',
       header: 'Total',
       render: (o) => (
-        <span className="order-list__total">
+        <span className="font-mono text-sm whitespace-nowrap">
           ${o.total.toLocaleString('es-CL')}
         </span>
       ),
@@ -77,15 +76,15 @@ export default function OrderListPage() {
   }
 
   return (
-    <div className="order-list">
-      <div className="order-list__header">
-        <h1 className="order-list__title">Pedidos</h1>
+    <div className="p-6 md:p-8">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-col sm:flex-row">
+        <h1 className="text-2xl font-bold text-text-primary">Pedidos</h1>
         <Button variant="primary" onClick={() => navigate('/pedidos/nuevo')}>
           Nuevo Pedido
         </Button>
       </div>
 
-      <div className="order-list__controls">
+      <div className="flex items-center gap-4 mb-6 flex-wrap flex-col sm:flex-row">
         <StatusFilter
           options={STATUS_OPTIONS}
           value={statusFilter}

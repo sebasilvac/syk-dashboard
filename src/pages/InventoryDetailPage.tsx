@@ -6,7 +6,6 @@ import { DataTable } from '@/components/DataTable';
 import { FormField } from '@/components/FormField';
 import { Button } from '@/components/Button';
 import type { Column } from '@/components/DataTable';
-import './InventoryDetailPage.css';
 
 interface VariantDisplay {
   id: string;
@@ -135,14 +134,14 @@ export default function InventoryDetailPage() {
           <RoleGate
             allowedRoles={['admin']}
             fallback={
-              <span className={`font-mono ${v.stock <= v.minStock ? 'inventory-detail__stock--low' : ''}`}>
+              <span className={`font-mono ${v.stock <= v.minStock ? 'text-warning font-semibold' : ''}`}>
                 {v.stock}
               </span>
             }
           >
             <input
               type="number"
-              className={`inventory-detail__stock-input ${v.stock <= v.minStock ? 'inventory-detail__stock-input--low' : ''}`}
+              className={`w-20 px-2 py-1 border rounded-xl font-mono text-sm bg-bg-secondary text-text-primary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow ${v.stock <= v.minStock ? 'border-warning bg-warning-muted' : 'border-secondary'}`}
               value={editingStock[v.id] ?? String(v.stock)}
               onChange={(e) => handleStockEdit(v.id, e.target.value)}
               onBlur={() => handleStockCommit(v.id)}
@@ -160,14 +159,15 @@ export default function InventoryDetailPage() {
       },
     ];
     return base;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingStock]);
 
   if (!product) {
     return (
-      <div className="inventory-detail">
-        <div className="inventory-detail__not-found">
-          <h1 className="inventory-detail__not-found-title">Producto no encontrado</h1>
-          <p className="inventory-detail__not-found-text">
+      <div className="p-6 md:p-8 max-w-[960px]">
+        <div className="flex flex-col items-center justify-center min-h-[300px] gap-4 text-center">
+          <h1 className="text-xl font-semibold text-text-primary">Producto no encontrado</h1>
+          <p className="text-text-muted text-sm">
             El producto que buscas no existe o fue eliminado.
           </p>
           <Button variant="secondary" onClick={() => navigate('/inventario')}>
@@ -179,13 +179,13 @@ export default function InventoryDetailPage() {
   }
 
   return (
-    <div className="inventory-detail">
-      <div className="inventory-detail__header">
-        <div className="inventory-detail__header-info">
-          <h1 className="inventory-detail__name">{product.name}</h1>
-          <div className="inventory-detail__meta">
-            <span className="inventory-detail__meta-item">{product.category}</span>
-            <span className="inventory-detail__meta-item">
+    <div className="p-6 md:p-8 max-w-[960px]">
+      <div className="flex flex-col sm:flex-row items-start justify-between mb-8 gap-4">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-bold text-text-primary">{product.name}</h1>
+          <div className="flex items-center gap-4 text-sm text-text-muted">
+            <span className="flex items-center gap-1">{product.category}</span>
+            <span className="flex items-center gap-1">
               {product.variants.length} variante{product.variants.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -195,7 +195,7 @@ export default function InventoryDetailPage() {
         </Button>
       </div>
 
-      <h2 className="inventory-detail__section-title">Variantes</h2>
+      <h2 className="text-lg font-semibold text-text-primary mb-4">Variantes</h2>
       <DataTable
         columns={variantColumns}
         data={variantDisplays}
@@ -203,14 +203,14 @@ export default function InventoryDetailPage() {
       />
 
       <RoleGate allowedRoles={['admin']}>
-        <div className="inventory-detail__add-form">
-          <h3 className="inventory-detail__form-title">Agregar Variante</h3>
-          <form onSubmit={handleAddVariant} className="inventory-detail__form">
+        <div className="mt-8 pt-6 border-t border-secondary/50">
+          <h3 className="text-base font-semibold text-text-primary mb-4">Agregar Variante</h3>
+          <form onSubmit={handleAddVariant} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-start">
             <FormField label="Talla" error={errors.size} htmlFor="variant-size">
               <input
                 id="variant-size"
                 type="text"
-                className="inventory-detail__input"
+                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
                 value={form.size}
                 onChange={(e) => handleFormChange('size', e.target.value)}
                 placeholder="Ej: M, L, XL"
@@ -221,7 +221,7 @@ export default function InventoryDetailPage() {
               <input
                 id="variant-color"
                 type="text"
-                className="inventory-detail__input"
+                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
                 value={form.color}
                 onChange={(e) => handleFormChange('color', e.target.value)}
                 placeholder="Ej: Rojo, Azul"
@@ -232,7 +232,7 @@ export default function InventoryDetailPage() {
               <input
                 id="variant-stock"
                 type="number"
-                className="inventory-detail__input"
+                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
                 value={form.stock}
                 onChange={(e) => handleFormChange('stock', e.target.value)}
                 min="0"
@@ -243,14 +243,14 @@ export default function InventoryDetailPage() {
               <input
                 id="variant-min-stock"
                 type="number"
-                className="inventory-detail__input"
+                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
                 value={form.minStock}
                 onChange={(e) => handleFormChange('minStock', e.target.value)}
                 min="0"
               />
             </FormField>
 
-            <div className="inventory-detail__form-actions">
+            <div className="flex items-end pt-6">
               <Button type="submit" variant="primary">
                 Agregar
               </Button>

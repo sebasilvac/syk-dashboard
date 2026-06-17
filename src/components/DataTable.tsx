@@ -1,5 +1,3 @@
-import './DataTable.css';
-
 interface Column<T> {
   key: keyof T | string;
   header: string;
@@ -23,54 +21,65 @@ export function DataTable<T extends { id: string }>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className="data-table__empty" role="status">
+      <div
+        className="flex items-center justify-center p-12 text-text-muted text-sm text-center"
+        role="status"
+      >
         <p>{emptyMessage}</p>
       </div>
     );
   }
 
   return (
-    <div className="data-table__wrapper">
-      <table className="data-table">
-        <thead className="data-table__head">
-          <tr>
-            {columns.map((col) => (
-              <th key={String(col.key)} className="data-table__th">
-                {col.header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="data-table__body">
-          {data.map((item) => (
-            <tr
-              key={item.id}
-              className={`data-table__row ${onRowClick ? 'data-table__row--clickable' : ''} ${rowClassName ? rowClassName(item) : ''}`}
-              onClick={onRowClick ? () => onRowClick(item) : undefined}
-              tabIndex={onRowClick ? 0 : undefined}
-              onKeyDown={
-                onRowClick
-                  ? (e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        onRowClick(item);
-                      }
-                    }
-                  : undefined
-              }
-              role={onRowClick ? 'button' : undefined}
-            >
+    <div className="bg-surface rounded-2xl shadow-soft overflow-hidden border border-secondary/30">
+      <div className="w-full overflow-x-auto">
+        <table className="w-full border-collapse text-sm">
+          <thead>
+            <tr className="bg-bg-secondary">
               {columns.map((col) => (
-                <td key={String(col.key)} className="data-table__td">
-                  {col.render
-                    ? col.render(item)
-                    : String(item[col.key as keyof T] ?? '')}
-                </td>
+                <th
+                  key={String(col.key)}
+                  className="px-4 py-3 text-left text-text-muted uppercase text-xs font-semibold tracking-wider whitespace-nowrap"
+                >
+                  {col.header}
+                </th>
               ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {data.map((item) => (
+              <tr
+                key={item.id}
+                className={`border-b border-secondary/50 hover:bg-bg-secondary transition-colors duration-150 ${onRowClick ? 'cursor-pointer' : ''} ${rowClassName ? rowClassName(item) : ''}`}
+                onClick={onRowClick ? () => onRowClick(item) : undefined}
+                tabIndex={onRowClick ? 0 : undefined}
+                onKeyDown={
+                  onRowClick
+                    ? (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onRowClick(item);
+                        }
+                      }
+                    : undefined
+                }
+                role={onRowClick ? 'button' : undefined}
+              >
+                {columns.map((col) => (
+                  <td
+                    key={String(col.key)}
+                    className="px-4 py-3 align-middle text-text-primary"
+                  >
+                    {col.render
+                      ? col.render(item)
+                      : String(item[col.key as keyof T] ?? '')}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

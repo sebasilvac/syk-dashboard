@@ -1,5 +1,3 @@
-import './Select.css';
-
 interface SelectOption {
   value: string;
   label: string;
@@ -23,10 +21,10 @@ export function Select({
   id,
 }: SelectProps) {
   return (
-    <div className="select-wrapper">
+    <div className="relative inline-flex w-full">
       <select
         id={id}
-        className="select"
+        className="w-full py-2 pl-4 pr-10 font-sans text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl appearance-none cursor-pointer outline-none transition-all duration-150 focus:border-accent focus:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
@@ -41,7 +39,7 @@ export function Select({
         ))}
       </select>
       <svg
-        className="select__chevron"
+        className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none"
         width="16"
         height="16"
         viewBox="0 0 24 24"

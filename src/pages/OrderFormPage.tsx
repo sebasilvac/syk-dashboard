@@ -10,7 +10,6 @@ import { FormField } from '@/components/FormField';
 import { Button } from '@/components/Button';
 import type { ValidationError } from '@/lib/formValidation';
 import type { StockWarning } from '@/lib/stockValidation';
-import './OrderFormPage.css';
 
 interface FormLine {
   id: string;
@@ -120,6 +119,7 @@ export default function OrderFormPage() {
         status: 'activo',
         notes,
         dueDate,
+        deposits: [],
       },
     });
 
@@ -136,21 +136,21 @@ export default function OrderFormPage() {
   }
 
   return (
-    <div className="order-form">
-      <h1 className="order-form__title">Nuevo Pedido</h1>
+    <div className="p-6 md:p-8 max-w-[960px]">
+      <h1 className="text-2xl font-bold text-text-primary mb-6">Nuevo Pedido</h1>
 
       {errors.length > 0 && (
-        <div className="order-form__errors" role="alert">
+        <div className="flex flex-col gap-1 mb-4 p-4 bg-destructive-muted border border-destructive/20 rounded-xl" role="alert">
           {errors.map((err) => (
-            <span key={err.field} className="order-form__error-item">
+            <span key={err.field} className="text-sm text-destructive">
               {err.message}
             </span>
           ))}
         </div>
       )}
 
-      <section className="order-form__section">
-        <h2 className="order-form__section-title">Cliente</h2>
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-text-primary mb-4 pb-2 border-b border-secondary/50">Cliente</h2>
         <FormField label="Seleccionar cliente" htmlFor="client-select" error={errors.find((e) => e.field === 'clientId')?.message}>
           <Select
             id="client-select"
@@ -162,29 +162,29 @@ export default function OrderFormPage() {
         </FormField>
       </section>
 
-      <section className="order-form__section">
-        <h2 className="order-form__section-title">Fecha de Entrega</h2>
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-text-primary mb-4 pb-2 border-b border-secondary/50">Fecha de Entrega</h2>
         <FormField label="Fecha de entrega" htmlFor="due-date-input" error={errors.find((e) => e.field === 'dueDate')?.message}>
           <input
             id="due-date-input"
             type="date"
-            className="order-form__date-input"
+            className="w-full max-w-[240px] px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
         </FormField>
       </section>
 
-      <section className="order-form__section">
-        <h2 className="order-form__section-title">Productos</h2>
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-text-primary mb-4 pb-2 border-b border-secondary/50">Productos</h2>
 
-        <div className="order-form__lines">
+        <div className="flex flex-col gap-4">
           {lines.map((line) => {
             const warning = getStockWarningForLine(line.variantId);
             return (
-              <div key={line.id} className="order-form__line">
-                <div className="order-form__line-field">
-                  <span className="order-form__line-label">Producto</span>
+              <div key={line.id} className="grid grid-cols-1 md:grid-cols-[1fr_1fr_100px_120px_auto_auto] gap-3 items-end p-4 bg-surface border border-secondary/50 rounded-xl">
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Producto</span>
                   <Select
                     options={productOptions}
                     value={line.productId}
@@ -193,8 +193,8 @@ export default function OrderFormPage() {
                   />
                 </div>
 
-                <div className="order-form__line-field">
-                  <span className="order-form__line-label">Variante</span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Variante</span>
                   <Select
                     options={getVariantOptions(line.productId)}
                     value={line.variantId}
@@ -204,38 +204,38 @@ export default function OrderFormPage() {
                   />
                 </div>
 
-                <div className="order-form__line-field">
-                  <span className="order-form__line-label">Cantidad</span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Cantidad</span>
                   <input
                     type="number"
-                    className="order-form__line-input"
+                    className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
                     value={line.quantity}
                     onChange={(e) => updateLine(line.id, { quantity: Number(e.target.value) || 0 })}
                     min={1}
                   />
                 </div>
 
-                <div className="order-form__line-field">
-                  <span className="order-form__line-label">Precio Unit.</span>
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Precio Unit.</span>
                   <input
                     type="number"
-                    className="order-form__line-input"
+                    className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
                     value={line.unitPrice}
                     onChange={(e) => updateLine(line.id, { unitPrice: Number(e.target.value) || 0 })}
                     min={0}
                   />
                 </div>
 
-                <div className="order-form__line-field">
-                  <span className="order-form__line-label">Subtotal</span>
-                  <span className="order-form__line-subtotal">
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Subtotal</span>
+                  <span className="font-mono text-sm text-text-muted py-2 text-right whitespace-nowrap">
                     ${calculateSubtotal(line.quantity, line.unitPrice).toLocaleString('es-CL')}
                   </span>
                 </div>
 
                 <button
                   type="button"
-                  className="order-form__line-remove"
+                  className="flex items-center justify-center w-9 h-9 rounded-xl text-destructive hover:bg-destructive-muted transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none"
                   onClick={() => removeLine(line.id)}
                   aria-label="Eliminar línea"
                   disabled={lines.length === 1}
@@ -247,7 +247,7 @@ export default function OrderFormPage() {
                 </button>
 
                 {warning && (
-                  <div className="order-form__line-warning" role="alert">
+                  <div className="col-span-full flex items-center gap-1 text-[0.8125rem] text-destructive px-2 py-1 bg-destructive-muted rounded-xl" role="alert">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                       <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
                       <line x1="12" y1="9" x2="12" y2="13" />
@@ -261,7 +261,11 @@ export default function OrderFormPage() {
           })}
         </div>
 
-        <button type="button" className="order-form__add-line" onClick={addLine}>
+        <button
+          type="button"
+          className="flex items-center gap-2 px-4 py-2 mt-4 text-accent font-medium text-sm rounded-xl hover:bg-accent/10 transition-colors duration-150"
+          onClick={addLine}
+        >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
@@ -269,25 +273,25 @@ export default function OrderFormPage() {
           Agregar Línea
         </button>
 
-        <div className="order-form__total">
-          <span className="order-form__total-label">Total:</span>
-          <span className="order-form__total-value">
+        <div className="flex justify-end items-center gap-4 py-4 border-t-2 border-secondary mt-4">
+          <span className="text-base font-semibold text-text-primary">Total:</span>
+          <span className="font-mono text-xl font-bold text-text-primary">
             ${total.toLocaleString('es-CL')}
           </span>
         </div>
       </section>
 
-      <section className="order-form__section">
-        <h2 className="order-form__section-title">Notas</h2>
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold text-text-primary mb-4 pb-2 border-b border-secondary/50">Notas</h2>
         <textarea
-          className="order-form__notes"
+          className="w-full min-h-[80px] p-4 bg-bg-secondary border border-secondary rounded-xl text-sm text-text-primary placeholder:text-secondary resize-y focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           placeholder="Notas adicionales (opcional)..."
         />
       </section>
 
-      <div className="order-form__actions">
+      <div className="flex justify-end gap-4 pt-6 border-t border-secondary/50 flex-col sm:flex-row">
         <Button variant="ghost" onClick={() => navigate('/pedidos')}>
           Cancelar
         </Button>

@@ -1,5 +1,4 @@
 import { useRegisterSW } from 'virtual:pwa-register/react'
-import './ReloadPrompt.css'
 
 function ReloadPrompt() {
   const {
@@ -30,19 +29,19 @@ function ReloadPrompt() {
   }
 
   return (
-    <div className="reload-prompt" role="alert" aria-live="polite">
-      <div className="reload-prompt__message">
+    <div className="fixed bottom-4 right-4 z-[9999] p-4 px-5 bg-surface border border-secondary/50 rounded-xl shadow-elevated flex flex-col gap-3 max-w-[320px] animate-[slide-up_300ms_ease-out]" role="alert" aria-live="polite">
+      <div className="text-sm text-text-primary">
         {offlineReady ? (
           <span>App lista para uso offline.</span>
         ) : (
           <span>Nueva versión disponible.</span>
         )}
       </div>
-      <div className="reload-prompt__actions">
+      <div className="flex gap-2">
         {needRefresh && (
           <button
             type="button"
-            className="reload-prompt__btn reload-prompt__btn--update"
+            className="text-[13px] px-3 py-1.5 rounded-xl border-none cursor-pointer font-sans transition-opacity duration-200 hover:opacity-85 bg-accent text-white"
             onClick={() => updateServiceWorker(true)}
           >
             Actualizar
@@ -50,7 +49,7 @@ function ReloadPrompt() {
         )}
         <button
           type="button"
-          className="reload-prompt__btn reload-prompt__btn--close"
+          className="text-[13px] px-3 py-1.5 rounded-xl border-none cursor-pointer font-sans transition-opacity duration-200 hover:opacity-85 bg-bg-secondary text-text-muted"
           onClick={handleClose}
         >
           Cerrar

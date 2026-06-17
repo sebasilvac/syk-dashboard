@@ -72,6 +72,7 @@ export function dataReducer(state: AppData, action: DataAction): AppData {
         ...action.payload,
         id: crypto.randomUUID(),
         number,
+        deposits: action.payload.deposits ?? [],
         createdAt: now,
         updatedAt: now,
       };
@@ -104,6 +105,7 @@ export function dataReducer(state: AppData, action: DataAction): AppData {
         notes: quotation.notes,
         dueDate,
         quotationId,
+        deposits: [],
         createdAt: now,
         updatedAt: now,
       };
@@ -170,6 +172,63 @@ export function dataReducer(state: AppData, action: DataAction): AppData {
       return {
         ...state,
         products: deductStock(state.products, items),
+      };
+    }
+
+    case 'CLIENT_CREATE': {
+      const newClient = {
+        ...action.payload,
+        id: crypto.randomUUID(),
+      };
+      return {
+        ...state,
+        clients: [...state.clients, newClient],
+      };
+    }
+
+    case 'CLIENT_UPDATE': {
+      const { id, changes } = action.payload;
+      return {
+        ...state,
+        clients: state.clients.map((c) =>
+          c.id === id ? { ...c, ...changes } : c
+        ),
+      };
+    }
+
+    case 'CLIENT_DELETE': {
+      const { id } = action.payload;
+      return {
+        ...state,
+        clients: state.clients.filter((c) => c.id !== id),
+      };
+    }
+
+    case 'DEPOSIT_ADD': {
+      const { orderId, deposit } = action.payload;
+      const newDeposit = {
+        ...deposit,
+        id: crypto.randomUUID(),
+      };
+      return {
+        ...state,
+        orders: state.orders.map((o) =>
+          o.id === orderId
+            ? { ...o, deposits: [...o.deposits, newDeposit], updatedAt: now }
+            : o
+        ),
+      };
+    }
+
+    case 'DEPOSIT_REMOVE': {
+      const { orderId, depositId } = action.payload;
+      return {
+        ...state,
+        orders: state.orders.map((o) =>
+          o.id === orderId
+            ? { ...o, deposits: o.deposits.filter((d) => d.id !== depositId), updatedAt: now }
+            : o
+        ),
       };
     }
 

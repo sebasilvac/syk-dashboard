@@ -1,5 +1,5 @@
 import { AlertBell } from '@/components/AlertBell';
-import './TopBar.css';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 interface TopBarProps {
   onMenuToggle: () => void;
@@ -7,9 +7,9 @@ interface TopBarProps {
 
 export function TopBar({ onMenuToggle }: TopBarProps) {
   return (
-    <header className="topbar">
+    <header className="sticky top-0 z-10 flex items-center justify-between h-16 px-4 lg:px-6 bg-bg-primary border-b border-surface">
       <button
-        className="topbar__hamburger"
+        className="md:hidden flex items-center justify-center p-1.5 rounded-lg text-text-muted hover:text-text-primary transition-colors duration-150 cursor-pointer bg-transparent border-none"
         onClick={onMenuToggle}
         aria-label="Abrir menú"
         type="button"
@@ -21,11 +21,12 @@ export function TopBar({ onMenuToggle }: TopBarProps) {
         </svg>
       </button>
 
-      <div className="topbar__breadcrumb" aria-label="Breadcrumb">
-        {/* Breadcrumb placeholder — pages can fill this as needed */}
+      <div className="hidden md:flex flex-1 items-center">
+        <span className="text-sm text-text-muted">Buscar...</span>
       </div>
 
-      <div className="topbar__actions">
+      <div className="flex items-center gap-3">
+        <ThemeToggle />
         <AlertBell />
       </div>
     </header>

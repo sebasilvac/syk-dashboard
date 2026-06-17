@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/Button';
-import './NotFoundPage.css';
 
 export default function NotFoundPage() {
   const navigate = useNavigate();
@@ -14,20 +13,22 @@ export default function NotFoundPage() {
   }
 
   return (
-    <div className="not-found">
-      <span className="not-found__code">404</span>
-      <h1 className="not-found__title">No Encontrado</h1>
-      <p className="not-found__message">
-        El recurso que buscas no existe o fue eliminado.
-      </p>
-      <div className="not-found__actions">
-        <Button variant="secondary" onClick={handleGoBack}>
-          Volver
-        </Button>
-        <Button variant="primary" onClick={handleGoHome}>
-          Ir al Dashboard
-        </Button>
+    <main className="min-h-dvh flex items-center justify-center bg-bg-primary p-6">
+      <div className="bg-bg-secondary rounded-2xl shadow-elevated border border-surface p-8 w-full max-w-md text-center">
+        <span className="block font-bold text-6xl text-secondary leading-none mb-4">404</span>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">No Encontrado</h1>
+        <p className="text-sm text-text-muted mb-8 max-w-sm mx-auto">
+          El recurso que buscas no existe o fue eliminado.
+        </p>
+        <div className="flex justify-center gap-3">
+          <Button variant="secondary" onClick={handleGoBack}>
+            Volver
+          </Button>
+          <Button variant="primary" onClick={handleGoHome}>
+            Ir al Dashboard
+          </Button>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }

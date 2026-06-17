@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/Button';
 import type { Role } from '@/types/models';
-import './LoginPage.css';
 
 const ROLES: { value: Role; description: string }[] = [
   { value: 'admin', description: 'Acceso completo a todas las funcionalidades' },
@@ -28,29 +27,35 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="login">
-      <div className="login__card">
-        <h1 className="login__title">SYK Dashboard</h1>
-        <p className="login__subtitle">Selecciona tu rol para continuar</p>
+    <main className="min-h-dvh flex items-center justify-center bg-bg-primary p-6">
+      <div className="bg-bg-secondary rounded-2xl shadow-elevated border border-surface p-8 w-full max-w-md">
+        <h1 className="text-center text-2xl font-bold text-text-primary mb-1">SYK Dashboard</h1>
+        <p className="text-center text-sm text-text-muted mb-6">Selecciona tu rol para continuar</p>
 
-        <fieldset className="login__roles">
+        <fieldset className="flex flex-col gap-3 mb-6 border-none p-0 m-0">
           <legend className="sr-only">Seleccionar rol</legend>
           {ROLES.map(({ value, description }) => (
             <label
               key={value}
-              className={`login__role${selectedRole === value ? ' login__role--selected' : ''}`}
+              className={`flex items-center gap-4 px-4 py-3 border rounded-xl cursor-pointer transition-all duration-150 ${
+                selectedRole === value
+                  ? 'border-accent bg-accent/5'
+                  : 'border-secondary hover:border-accent-soft hover:bg-surface/30'
+              }`}
             >
               <input
                 type="radio"
                 name="role"
                 value={value}
-                className="login__role-input"
+                className="accent-accent w-[18px] h-[18px] shrink-0"
                 checked={selectedRole === value}
                 onChange={() => setSelectedRole(value)}
               />
-              <span className="login__role-info">
-                <span className="login__role-name">{value}</span>
-                <span className="login__role-desc">{description}</span>
+              <span className="flex flex-col gap-0.5">
+                <span className="font-semibold text-[0.9375rem] text-text-primary capitalize">
+                  {value}
+                </span>
+                <span className="text-[0.8125rem] text-text-muted">{description}</span>
               </span>
             </label>
           ))}
@@ -59,7 +64,7 @@ export default function LoginPage() {
         <Button
           variant="primary"
           size="lg"
-          className="login__submit"
+          className="w-full"
           disabled={!selectedRole}
           onClick={handleConfirm}
         >
