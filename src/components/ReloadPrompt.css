@@ -1,0 +1,61 @@
+.reload-prompt {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 9999;
+  padding: 16px 20px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 320px;
+  animation: slide-up 0.3s ease-out;
+}
+
+.reload-prompt__message {
+  font-size: 14px;
+  color: var(--text-h);
+}
+
+.reload-prompt__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.reload-prompt__btn {
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--sans);
+  transition: opacity 0.2s;
+}
+
+.reload-prompt__btn:hover {
+  opacity: 0.85;
+}
+
+.reload-prompt__btn--update {
+  background: var(--accent);
+  color: #fff;
+}
+
+.reload-prompt__btn--close {
+  background: var(--code-bg);
+  color: var(--text);
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
