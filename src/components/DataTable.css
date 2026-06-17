@@ -1,0 +1,83 @@
+/* ============================================================
+   DataTable Component
+   Estilo: minimalismo exagerado — líneas mínimas, tipografía limpia
+   ============================================================ */
+
+/* --- Wrapper: enables horizontal scroll on small screens --- */
+.data-table__wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* --- Table base --- */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+}
+
+/* --- Header --- */
+.data-table__head {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.data-table__th {
+  padding: var(--spacing-sm) var(--spacing-md);
+  text-align: left;
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  white-space: nowrap;
+}
+
+/* --- Body rows --- */
+.data-table__row {
+  border-bottom: 1px solid var(--color-border);
+  transition: background-color 0.15s ease;
+}
+
+.data-table__row--clickable {
+  cursor: pointer;
+}
+
+.data-table__row--clickable:hover {
+  background-color: #f1f5f9;
+}
+
+.data-table__row--clickable:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+  border-radius: 2px;
+}
+
+/* --- Cells --- */
+.data-table__td {
+  padding: var(--spacing-sm) var(--spacing-md);
+  vertical-align: middle;
+  color: var(--color-foreground);
+}
+
+/* --- Empty state --- */
+.data-table__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-md);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* --- Responsive: tighter spacing on mobile --- */
+@media (max-width: 768px) {
+  .data-table__th,
+  .data-table__td {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.8125rem;
+  }
+}

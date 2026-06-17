@@ -1,0 +1,58 @@
+/* ============================================================
+   OrderListPage
+   Estilo: minimalismo exagerado — listado de pedidos
+   ============================================================ */
+
+.order-list {
+  padding: var(--spacing-xl);
+}
+
+.order-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.order-list__title {
+  margin-bottom: 0;
+}
+
+.order-list__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.order-list__total {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.order-list__due-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 767px) {
+  .order-list {
+    padding: var(--spacing-md);
+  }
+
+  .order-list__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-list__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

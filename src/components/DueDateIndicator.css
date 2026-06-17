@@ -1,0 +1,25 @@
+/* ============================================================
+   DueDateIndicator Component
+   Indicador visual de fecha de entrega
+   ============================================================ */
+
+.due-date-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius);
+}
+
+/* --- Warning: 0 < days <= 2 --- */
+.due-date-indicator--warning {
+  color: var(--color-warning);
+  background-color: rgba(217, 119, 6, 0.1);
+}
+
+/* --- Critical: overdue --- */
+.due-date-indicator--critical {
+  color: var(--color-critical);
+  background-color: rgba(220, 38, 38, 0.1);
+}

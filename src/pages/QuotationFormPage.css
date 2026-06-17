@@ -1,0 +1,201 @@
+/* ============================================================
+   QuotationFormPage
+   Estilo: minimalismo exagerado — formulario de nueva cotización
+   ============================================================ */
+
+.quotation-form {
+  padding: var(--spacing-xl);
+  max-width: 960px;
+}
+
+.quotation-form__title {
+  margin-bottom: var(--spacing-lg);
+}
+
+.quotation-form__section {
+  margin-bottom: var(--spacing-xl);
+}
+
+.quotation-form__section-title {
+  font-size: 1.125rem;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* --- Product lines --- */
+
+.quotation-form__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.quotation-form__line {
+  display: grid;
+  grid-template-columns: 1fr 1fr 100px 120px auto;
+  gap: var(--spacing-sm);
+  align-items: end;
+  padding: var(--spacing-md);
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.quotation-form__line-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.quotation-form__line-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.quotation-form__line-input {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  width: 100%;
+}
+
+.quotation-form__line-input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+}
+
+.quotation-form__line-subtotal {
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  padding: var(--spacing-sm) 0;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.quotation-form__line-remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  color: var(--color-destructive);
+  cursor: pointer;
+}
+
+.quotation-form__line-remove:hover {
+  background-color: rgba(220, 38, 38, 0.08);
+}
+
+/* --- Add line button --- */
+
+.quotation-form__add-line {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: 0.875rem;
+  cursor: pointer;
+  border-radius: var(--radius);
+}
+
+.quotation-form__add-line:hover {
+  background-color: rgba(5, 150, 105, 0.06);
+}
+
+/* --- Total --- */
+
+.quotation-form__total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) 0;
+  border-top: 2px solid var(--color-foreground);
+  margin-top: var(--spacing-md);
+}
+
+.quotation-form__total-label {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.quotation-form__total-value {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* --- Notes textarea --- */
+
+.quotation-form__notes {
+  width: 100%;
+  min-height: 80px;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  resize: vertical;
+}
+
+.quotation-form__notes:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+}
+
+/* --- Actions --- */
+
+.quotation-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-border);
+}
+
+/* --- Errors --- */
+
+.quotation-form__errors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-bottom: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(220, 38, 38, 0.04);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+  border-radius: var(--radius);
+}
+
+.quotation-form__error-item {
+  font-size: 0.875rem;
+  color: var(--color-destructive);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 767px) {
+  .quotation-form {
+    padding: var(--spacing-md);
+  }
+
+  .quotation-form__line {
+    grid-template-columns: 1fr;
+  }
+
+  .quotation-form__actions {
+    flex-direction: column;
+  }
+}

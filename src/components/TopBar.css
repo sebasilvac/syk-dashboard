@@ -1,0 +1,41 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 2rem;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  min-height: 56px;
+}
+
+.topbar__hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-foreground);
+  cursor: pointer;
+  padding: 0.25rem;
+}
+
+.topbar__breadcrumb {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  opacity: 0.6;
+}
+
+.topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0.75rem 1rem;
+  }
+
+  .topbar__hamburger {
+    display: block;
+  }
+}

@@ -1,0 +1,78 @@
+/* ============================================================
+   MetricCard Component
+   Estilo: minimalismo exagerado — tarjeta amplia con tipografía bold
+   ============================================================ */
+
+.metric-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: box-shadow 0.15s ease;
+}
+
+.metric-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* --- Icon container --- */
+
+.metric-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}
+
+/* --- Content --- */
+
+.metric-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.metric-card__title {
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  letter-spacing: 0;
+  margin-bottom: 0;
+}
+
+.metric-card__value {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-foreground);
+}
+
+/* --- Variants --- */
+
+.metric-card--default .metric-card__icon {
+  background-color: #f1f5f9;
+  color: var(--color-primary);
+}
+
+.metric-card--accent .metric-card__icon {
+  background-color: rgba(5, 150, 105, 0.1);
+  color: var(--color-accent);
+}
+
+.metric-card--warning .metric-card__icon {
+  background-color: rgba(217, 119, 6, 0.1);
+  color: var(--color-warning);
+}
+
+.metric-card--destructive .metric-card__icon {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: var(--color-destructive);
+}

@@ -1,0 +1,48 @@
+/* ============================================================
+   SearchBar Component
+   Estilo: minimalismo exagerado — campo limpio con ícono inline
+   ============================================================ */
+
+.search-bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.search-bar__icon {
+  position: absolute;
+  left: var(--spacing-md);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+.search-bar__input {
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-left: calc(var(--spacing-md) + 20px + var(--spacing-sm));
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  background-color: #ffffff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.search-bar__input::placeholder {
+  color: var(--color-muted);
+}
+
+.search-bar__input:focus {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.1);
+}
+
+/* Remove default search clear button */
+.search-bar__input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}

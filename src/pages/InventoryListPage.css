@@ -1,0 +1,56 @@
+/* ============================================================
+   InventoryListPage
+   Estilo: minimalismo exagerado — listado de inventario
+   ============================================================ */
+
+.inventory-list {
+  padding: var(--spacing-xl);
+}
+
+.inventory-list__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-lg);
+  gap: var(--spacing-md);
+}
+
+.inventory-list__title {
+  margin-bottom: 0;
+}
+
+.inventory-list__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.inventory-list__name-cell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.inventory-list__row--low-stock {
+  background: rgba(217, 119, 6, 0.03);
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 767px) {
+  .inventory-list {
+    padding: var(--spacing-md);
+  }
+
+  .inventory-list__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inventory-list__controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

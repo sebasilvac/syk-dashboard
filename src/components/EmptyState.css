@@ -1,0 +1,43 @@
+/* ============================================================
+   EmptyState Component
+   Estado vacío para listas — centrado, espaciado generoso
+   ============================================================ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  text-align: center;
+}
+
+.empty-state__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-muted);
+  opacity: 0.6;
+}
+
+.empty-state__title {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-foreground);
+  margin-bottom: var(--spacing-sm);
+}
+
+.empty-state__description {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  max-width: 320px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.empty-state__action {
+  margin-top: var(--spacing-sm);
+}

@@ -1,0 +1,40 @@
+/* ============================================================
+   NotFoundPage
+   Estilo: minimalismo exagerado — centrado, mensaje claro
+   ============================================================ */
+
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: var(--spacing-xl);
+  text-align: center;
+}
+
+.not-found__code {
+  font-family: var(--font-heading);
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--color-border);
+  line-height: 1;
+  margin-bottom: var(--spacing-md);
+}
+
+.not-found__title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-sm);
+}
+
+.not-found__message {
+  font-size: 0.9375rem;
+  color: var(--color-muted);
+  margin-bottom: var(--spacing-xl);
+  max-width: 400px;
+}
+
+.not-found__actions {
+  display: flex;
+  gap: var(--spacing-md);
+}
