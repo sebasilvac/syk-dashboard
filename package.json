@@ -9,10 +9,12 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:types": "supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > src/types/database.ts"
   },
   "dependencies": {
     "@fontsource/inter": "^5.2.8",
+    "@supabase/supabase-js": "^2.108.2",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.18.0",

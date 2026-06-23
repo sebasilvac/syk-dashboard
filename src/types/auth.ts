@@ -10,3 +10,15 @@ export interface AuthContextValue {
   login: (role: Role) => void;
   logout: () => void;
 }
+
+export interface SupabaseAuthState {
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+}
+
+export interface SupabaseAuthContextValue {
+  state: SupabaseAuthState;
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  logout: () => Promise<void>;
+}
