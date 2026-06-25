@@ -8,10 +8,10 @@ function ReloadPrompt() {
   } = useRegisterSW({
     onRegisteredSW(_swUrl, registration) {
       if (registration) {
-        // Check for updates every hour
+        // Check for updates every 5 minutes
         setInterval(() => {
           registration.update()
-        }, 60 * 60 * 1000)
+        }, 5 * 60 * 1000)
       }
     },
     onRegisterError(error) {
