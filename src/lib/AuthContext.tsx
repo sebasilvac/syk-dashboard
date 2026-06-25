@@ -10,17 +10,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
+    loading: false,
   });
 
   const login = useCallback((role: Role) => {
     const user = mockUsers.find((u) => u.role === role) ?? null;
     if (user) {
-      setState({ user, isAuthenticated: true });
+      setState({ user, isAuthenticated: true, loading: false });
     }
   }, []);
 
   const logout = useCallback(() => {
-    setState({ user: null, isAuthenticated: false });
+    setState({ user: null, isAuthenticated: false, loading: false });
   }, []);
 
   const value: AuthContextValue = { state, login, logout };

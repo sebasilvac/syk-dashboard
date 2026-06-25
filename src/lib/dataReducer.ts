@@ -232,6 +232,43 @@ export function dataReducer(state: AppData, action: DataAction): AppData {
       };
     }
 
+    case 'PRODUCT_CREATE': {
+      const { name, category, variants } = action.payload;
+      const newProduct = {
+        id: crypto.randomUUID(),
+        name,
+        category,
+        variants: variants.map((v) => ({
+          ...v,
+          id: crypto.randomUUID(),
+        })),
+      };
+      return {
+        ...state,
+        products: [...state.products, newProduct],
+      };
+    }
+
+    case 'PRODUCT_DELETE': {
+      const { id } = action.payload;
+      return {
+        ...state,
+        products: state.products.filter((p) => p.id !== id),
+      };
+    }
+
+    case 'VARIANT_DELETE': {
+      const { productId, variantId } = action.payload;
+      return {
+        ...state,
+        products: state.products.map((p) =>
+          p.id === productId
+            ? { ...p, variants: p.variants.filter((v) => v.id !== variantId) }
+            : p
+        ),
+      };
+    }
+
     default:
       return state;
   }

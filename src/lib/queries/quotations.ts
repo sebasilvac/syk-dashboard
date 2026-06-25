@@ -55,21 +55,43 @@ export async function getQuotations(
 export async function createQuotation(
   quotation: Omit<Quotation, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<Quotation> {
+  // Get current user session to ensure seller_id matches auth.uid()
+  const { data: sessionData } = await supabase.auth.getSession();
+  const currentUserId = sessionData.session?.user.id;
+  const sellerId = currentUserId ?? quotation.sellerId;
+
+  // Generate a unique number if not provided
+  const number = quotation.number || `COT-${Date.now().toString(36).toUpperCase()}`;
+
+  // Debug: log what we're sending
+  console.log('[createQuotation] session user id:', currentUserId);
+  console.log('[createQuotation] seller_id being sent:', sellerId);
+  console.log('[createQuotation] number:', number);
+  console.log('[createQuotation] session exists:', !!sessionData.session);
+  console.log('[createQuotation] access_token exists:', !!sessionData.session?.access_token);
+
+  const insertPayload = {
+    number,
+    client_id: quotation.clientId,
+    seller_id: sellerId,
+    total: quotation.total,
+    status: quotation.status,
+    notes: quotation.notes,
+    estimated_delivery_date: quotation.estimatedDeliveryDate ?? null,
+  };
+
+  console.log('[createQuotation] full payload:', JSON.stringify(insertPayload));
+
   const { data, error } = await supabase
     .from('quotations')
-    .insert({
-      number: quotation.number,
-      client_id: quotation.clientId,
-      seller_id: quotation.sellerId,
-      total: quotation.total,
-      status: quotation.status,
-      notes: quotation.notes,
-      estimated_delivery_date: quotation.estimatedDeliveryDate ?? null,
-    } as Database['public']['Tables']['quotations']['Insert'])
+    .insert(insertPayload as Database['public']['Tables']['quotations']['Insert'])
     .select('*, quotation_lines(*)')
     .single();
 
-  if (error) handleSupabaseError(error);
+  if (error) {
+    console.error('[createQuotation] error:', JSON.stringify(error));
+    handleSupabaseError(error);
+  }
 
   // Insert quotation lines if provided
   const quotationId = (data as unknown as QuotationRow).id;

@@ -32,7 +32,7 @@ export interface Product {
 }
 
 // === Cotizaciones ===
-export type QuotationStatus = 'borrador' | 'pendiente' | 'aprobada' | 'rechazada';
+export type QuotationStatus = 'pendiente' | 'aprobada' | 'rechazada';
 
 export interface ProductLine {
   id: string;

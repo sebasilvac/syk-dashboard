@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useData } from '@/lib/DataContext';
+import { parseLocalDate } from '@/lib/computeAlerts';
 import { RoleGate } from '@/components/RoleGate';
 import { StatusBadge } from '@/components/StatusBadge';
 import { DataTable } from '@/components/DataTable';
@@ -110,7 +111,7 @@ export default function OrderDetailPage() {
               Creado: {new Date(order.createdAt).toLocaleDateString('es-CL')}
             </span>
             <span className="flex items-center gap-1">
-              Entrega: {new Date(order.dueDate).toLocaleDateString('es-CL')}
+              Entrega: {parseLocalDate(order.dueDate).toLocaleDateString('es-CL')}
             </span>
             <StatusBadge status={order.status} />
           </div>

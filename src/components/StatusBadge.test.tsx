@@ -99,13 +99,6 @@ describe('StatusBadge', () => {
       expect(badge.className).toContain('text-text-muted');
     });
 
-    it('maps "borrador" to completed (secondary) colors', () => {
-      render(<StatusBadge status="borrador" />);
-      const badge = screen.getByText('borrador');
-      expect(badge.className).toContain('bg-secondary/30');
-      expect(badge.className).toContain('text-text-muted');
-    });
-
     it('maps "rechazada" to critical (destructive) colors', () => {
       render(<StatusBadge status="rechazada" />);
       const badge = screen.getByText('rechazada');

@@ -137,7 +137,7 @@ const quotations: Quotation[] = [
       { id: 'line-q3a', productId: 'prod-4', variantId: 'var-4b', quantity: 12, unitPrice: 18000, subtotal: 216000 },
     ],
     total: 216000,
-    status: 'borrador',
+    status: 'pendiente',
     notes: '',
     createdAt: daysAgo(1),
     updatedAt: daysAgo(1),

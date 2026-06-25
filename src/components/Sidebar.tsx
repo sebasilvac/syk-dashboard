@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
 interface SidebarProps {
@@ -16,8 +16,14 @@ const navItems = [
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
-  const { state } = useAuth();
+  const { state, logout } = useAuth();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+
+  function handleLogout() {
+    logout();
+    navigate('/login', { replace: true });
+  }
 
   return (
     <>
@@ -83,11 +89,11 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        {/* User info at bottom */}
+        {/* User info + logout at bottom */}
         {state.user && (
           <div className={[
-            'border-t border-secondary/30 py-3',
-            collapsed ? 'px-2 text-center' : 'px-4',
+            'border-t border-secondary/30 py-3 flex flex-col gap-2',
+            collapsed ? 'px-2 items-center' : 'px-4',
           ].join(' ')}>
             {collapsed ? (
               <span className="text-base" title={state.user.name}>👤</span>
@@ -97,6 +103,23 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 <span className="text-xs text-text-muted capitalize">{state.user.role}</span>
               </div>
             )}
+            <button
+              type="button"
+              onClick={handleLogout}
+              className={[
+                'group relative flex items-center gap-2 rounded-xl text-sm font-medium text-text-muted hover:text-destructive hover:bg-destructive-muted transition-colors duration-150',
+                collapsed ? 'p-2 justify-center' : 'px-3 py-2 w-full',
+              ].join(' ')}
+              aria-label="Cerrar sesión"
+            >
+              <span className="text-base flex-shrink-0">🚪</span>
+              {!collapsed && <span>Cerrar sesión</span>}
+              {collapsed && (
+                <span className="absolute left-full ml-2 px-2 py-1 rounded bg-surface text-text-primary text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-150 z-50 shadow-elevated">
+                  Cerrar sesión
+                </span>
+              )}
+            </button>
           </div>
         )}
       </aside>
@@ -145,13 +168,22 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
           ))}
         </nav>
 
-        {/* Mobile user info */}
+        {/* Mobile user info + logout */}
         {state.user && (
-          <div className="border-t border-secondary/30 px-4 py-3">
+          <div className="border-t border-secondary/30 px-4 py-3 flex flex-col gap-2">
             <div className="flex flex-col gap-0.5">
               <span className="text-sm font-semibold text-text-primary">{state.user.name}</span>
               <span className="text-xs text-text-muted capitalize">{state.user.role}</span>
             </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="flex items-center gap-2 rounded-xl px-3 py-2 w-full text-sm font-medium text-text-muted hover:text-destructive hover:bg-destructive-muted transition-colors duration-150"
+              aria-label="Cerrar sesión"
+            >
+              <span className="text-base">🚪</span>
+              <span>Cerrar sesión</span>
+            </button>
           </div>
         )}
       </aside>

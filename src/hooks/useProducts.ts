@@ -11,6 +11,9 @@ export interface UseProductsResult {
   refetch: () => void;
   updateVariantStock: (variantId: string, stock: number) => Promise<void>;
   addVariant: (productId: string, variant: Omit<Variant, 'id'>) => Promise<void>;
+  createProduct: (name: string, category: string, variants: Omit<Variant, 'id'>[]) => Promise<void>;
+  deleteProduct: (productId: string) => Promise<void>;
+  deleteVariant: (productId: string, variantId: string) => Promise<void>;
 }
 
 export function useProducts(): UseProductsResult {
@@ -97,6 +100,88 @@ export function useProducts(): UseProductsResult {
     }
   }, [products]);
 
+  // Optimistic product creation with rollback
+  const createProduct = useCallback(async (name: string, category: string, variants: Omit<Variant, 'id'>[]) => {
+    const optimisticProduct: Product = {
+      id: crypto.randomUUID(),
+      name,
+      category,
+      variants: variants.map((v) => ({ ...v, id: crypto.randomUUID() })),
+    };
+    previousStateRef.current = products;
+    setProducts(prev => [...prev, optimisticProduct]);
+
+    try {
+      const created = await productQueries.createProduct(name, category, variants);
+      setProducts(prev =>
+        prev.map(p => p.id === optimisticProduct.id ? created : p)
+      );
+    } catch (e) {
+      setProducts(previousStateRef.current);
+      setError(e instanceof Error ? e.message : 'Error creating product');
+      throw e;
+    }
+  }, [products]);
+
+  // Optimistic product deletion with check-first pattern
+  const deleteProduct = useCallback(async (productId: string) => {
+    // 1. Check references (no optimistic update yet)
+    const blockReason = await productQueries.checkProductReferences(productId);
+    if (blockReason) {
+      setError(blockReason.message);
+      throw new Error(blockReason.message);
+    }
+
+    // 2. Now apply optimistic removal
+    previousStateRef.current = products;
+    setProducts(prev => prev.filter(p => p.id !== productId));
+
+    try {
+      await productQueries.deleteProduct(productId);
+    } catch (e) {
+      // 3. Rollback on network failure
+      setProducts(previousStateRef.current);
+      setError(e instanceof Error ? e.message : 'Error al eliminar producto');
+      throw e;
+    }
+  }, [products]);
+
+  // Optimistic variant deletion with last-variant guard + check-first pattern
+  const deleteVariant = useCallback(async (productId: string, variantId: string) => {
+    // 1. Last-variant guard
+    const product = products.find(p => p.id === productId);
+    if (product && product.variants.length === 1) {
+      const msg = 'No se puede eliminar la última variante. Elimina el producto completo en su lugar.';
+      setError(msg);
+      throw new Error(msg);
+    }
+
+    // 2. Check references
+    const blockReason = await productQueries.checkVariantReferences(variantId);
+    if (blockReason) {
+      setError(blockReason.message);
+      throw new Error(blockReason.message);
+    }
+
+    // 3. Optimistic removal
+    previousStateRef.current = products;
+    setProducts(prev =>
+      prev.map(p =>
+        p.id === productId
+          ? { ...p, variants: p.variants.filter(v => v.id !== variantId) }
+          : p
+      )
+    );
+
+    try {
+      await productQueries.deleteVariant(variantId);
+    } catch (e) {
+      setProducts(previousStateRef.current);
+      setError(e instanceof Error ? e.message : 'Error al eliminar variante');
+      throw e;
+    }
+  }, [products]);
+
   // Real-time subscription on 'products' table
   // When a product changes, re-fetch to get full product with variants
   useRealtimeSubscription('products', {
@@ -169,5 +254,8 @@ export function useProducts(): UseProductsResult {
     refetch: fetchProducts,
     updateVariantStock,
     addVariant,
+    createProduct,
+    deleteProduct,
+    deleteVariant,
   };
 }

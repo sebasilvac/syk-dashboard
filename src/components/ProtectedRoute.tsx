@@ -26,6 +26,11 @@ interface ProtectedRouteProps {
 
 export function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
   const { state } = useAuth();
+
+  if (state.loading) {
+    return <div className="min-h-dvh flex items-center justify-center text-text-muted">Cargando...</div>;
+  }
+
   const result = determineRouteAccess(
     state.isAuthenticated,
     state.user?.role ?? null,

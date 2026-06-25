@@ -1,4 +1,4 @@
-import { diffDays } from '@/lib/computeAlerts';
+import { diffDays, parseLocalDate } from '@/lib/computeAlerts';
 
 interface DueDateIndicatorProps {
   dueDate: string;
@@ -14,7 +14,7 @@ export type DueDateLevel = 'warning' | 'critical' | 'none';
  * - none: daysUntilDue > 2
  */
 export function computeDueDateLevel(dueDate: string, today: Date): DueDateLevel {
-  const days = diffDays(new Date(dueDate), today);
+  const days = diffDays(parseLocalDate(dueDate), today);
   if (days <= 0) return 'critical';
   if (days <= 2) return 'warning';
   return 'none';

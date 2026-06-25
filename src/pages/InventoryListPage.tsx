@@ -5,6 +5,8 @@ import { searchProducts } from '@/lib/searchFilter';
 import { DataTable } from '@/components/DataTable';
 import { SearchBar } from '@/components/SearchBar';
 import { LowStockIndicator, hasLowStock } from '@/components/LowStockIndicator';
+import { RoleGate } from '@/components/RoleGate';
+import { Button } from '@/components/Button';
 import type { Column } from '@/components/DataTable';
 import type { Product } from '@/types/models';
 
@@ -56,6 +58,9 @@ export default function InventoryListPage() {
     <div className="p-6 md:p-8">
       <div className="flex items-center justify-between mb-6 gap-4 flex-col sm:flex-row">
         <h1 className="text-2xl font-bold text-text-primary">Inventario</h1>
+        <RoleGate allowedRoles={['admin']}>
+          <Button onClick={() => navigate('/inventario/nuevo')}>Nuevo Producto</Button>
+        </RoleGate>
       </div>
 
       <div className="flex items-center gap-4 mb-6 flex-wrap flex-col sm:flex-row">

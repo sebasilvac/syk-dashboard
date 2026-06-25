@@ -59,7 +59,7 @@ const arbQuotation: fc.Arbitrary<Quotation> = fc.record({
   sellerId: arbSellerId,
   lines: fc.constant([]),
   total: fc.integer({ min: 0, max: 100000 }),
-  status: fc.constantFrom('borrador', 'pendiente', 'aprobada', 'rechazada'),
+  status: fc.constantFrom('pendiente', 'aprobada', 'rechazada'),
   notes: fc.string({ maxLength: 50 }),
   createdAt: fc.constant('2024-01-01T00:00:00Z'),
   updatedAt: fc.constant('2024-01-01T00:00:00Z'),

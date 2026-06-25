@@ -5,6 +5,7 @@ interface FormFieldProps {
   error?: string;
   children: ReactNode;
   htmlFor?: string;
+  errorId?: string;
 }
 
 const inputBase = [
@@ -31,7 +32,7 @@ const textareaBase = [
 const errorBorder =
   '[&_input]:border-destructive [&_select]:border-destructive [&_textarea]:border-destructive';
 
-export function FormField({ label, error, children, htmlFor }: FormFieldProps) {
+export function FormField({ label, error, children, htmlFor, errorId }: FormFieldProps) {
   return (
     <div className="flex flex-col gap-1.5">
       <label className="text-sm font-medium text-text-muted" htmlFor={htmlFor}>
@@ -43,7 +44,7 @@ export function FormField({ label, error, children, htmlFor }: FormFieldProps) {
         {children}
       </div>
       {error && (
-        <p className="text-destructive text-sm m-0" role="alert">
+        <p id={errorId} className="text-destructive text-sm m-0" role="alert">
           {error}
         </p>
       )}

@@ -126,7 +126,7 @@ export default function QuotationFormPage() {
         sellerId: authState.user?.id ?? '',
         lines: productLines,
         total: calculateDocumentTotal(productLines),
-        status: 'borrador',
+        status: 'pendiente',
         notes,
         estimatedDeliveryDate: estimatedDeliveryDate || undefined,
       },
@@ -303,7 +303,7 @@ export default function QuotationFormPage() {
           Cancelar
         </Button>
         <Button variant="primary" onClick={handleSave}>
-          Guardar Borrador
+          Crear Cotización
         </Button>
       </div>
     </div>

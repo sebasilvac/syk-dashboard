@@ -6,6 +6,7 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: 'button' | 'submit' | 'reset';
   className?: string;
+  'aria-label'?: string;
 }
 
 const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
@@ -32,6 +33,7 @@ export function Button({
   children,
   type = 'button',
   className,
+  'aria-label': ariaLabel,
 }: ButtonProps) {
   return (
     <button
@@ -39,6 +41,7 @@ export function Button({
       className={`${commonClasses} ${variantClasses[variant]} ${sizeClasses[size]}${className ? ` ${className}` : ''}`}
       disabled={disabled}
       onClick={onClick}
+      aria-label={ariaLabel}
     >
       {children}
     </button>

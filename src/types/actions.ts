@@ -15,4 +15,7 @@ export type DataAction =
   | { type: 'CLIENT_UPDATE'; payload: { id: string; changes: Partial<Omit<Client, 'id'>> } }
   | { type: 'CLIENT_DELETE'; payload: { id: string } }
   | { type: 'DEPOSIT_ADD'; payload: { orderId: string; deposit: Omit<Deposit, 'id'> } }
-  | { type: 'DEPOSIT_REMOVE'; payload: { orderId: string; depositId: string } };
+  | { type: 'DEPOSIT_REMOVE'; payload: { orderId: string; depositId: string } }
+  | { type: 'PRODUCT_CREATE'; payload: { name: string; category: string; variants: Omit<Variant, 'id'>[] } }
+  | { type: 'PRODUCT_DELETE'; payload: { id: string } }
+  | { type: 'VARIANT_DELETE'; payload: { productId: string; variantId: string } };

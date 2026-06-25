@@ -10,8 +10,8 @@
 -- NOTE: In production, create these users via Supabase Dashboard or Auth API.
 -- The UUIDs below must match the auth.users entries.
 -- ===========================
--- user-1: Carolina Méndez (admin)  → 00000000-0000-0000-0000-000000000001
--- user-2: Luis Herrera (vendedor)  → 00000000-0000-0000-0000-000000000002
+-- user-1: Carolina Méndez (admin)  → 617ad322-4e0a-4252-87cd-9707d355e32b
+-- user-2: Luis Herrera (vendedor)  → e107e456-dd85-40d6-933f-dede04c0a4ab
 
 -- ===========================
 -- Clients
@@ -70,10 +70,10 @@ INSERT INTO variants (id, product_id, size, color, stock, min_stock) VALUES
 -- Quotations
 -- ===========================
 INSERT INTO quotations (id, number, client_id, seller_id, total, status, notes, estimated_delivery_date, created_at, updated_at) VALUES
-  ('44444444-4444-4444-4444-444444444001', 'COT-001', '11111111-1111-1111-1111-111111111001', '00000000-0000-0000-0000-000000000002', 212500.00, 'pendiente', 'Entrega solicitada para fin de mes.', (CURRENT_DATE + INTERVAL '14 days')::DATE, now() - INTERVAL '5 days', now() - INTERVAL '5 days'),
-  ('44444444-4444-4444-4444-444444444002', 'COT-002', '11111111-1111-1111-1111-111111111002', '00000000-0000-0000-0000-000000000002', 340000.00, 'aprobada', 'Cliente prefiere envío a domicilio.', NULL, now() - INTERVAL '10 days', now() - INTERVAL '3 days'),
-  ('44444444-4444-4444-4444-444444444003', 'COT-003', '11111111-1111-1111-1111-111111111003', '00000000-0000-0000-0000-000000000001', 216000.00, 'borrador', '', NULL, now() - INTERVAL '1 day', now() - INTERVAL '1 day'),
-  ('44444444-4444-4444-4444-444444444004', 'COT-004', '11111111-1111-1111-1111-111111111001', '00000000-0000-0000-0000-000000000001', 180000.00, 'rechazada', 'Cliente solicitó descuento que no fue aprobado.', NULL, now() - INTERVAL '15 days', now() - INTERVAL '12 days');
+  ('44444444-4444-4444-4444-444444444001', 'COT-001', '11111111-1111-1111-1111-111111111001', 'e107e456-dd85-40d6-933f-dede04c0a4ab', 212500.00, 'pendiente', 'Entrega solicitada para fin de mes.', (CURRENT_DATE + INTERVAL '14 days')::DATE, now() - INTERVAL '5 days', now() - INTERVAL '5 days'),
+  ('44444444-4444-4444-4444-444444444002', 'COT-002', '11111111-1111-1111-1111-111111111002', 'e107e456-dd85-40d6-933f-dede04c0a4ab', 340000.00, 'aprobada', 'Cliente prefiere envío a domicilio.', NULL, now() - INTERVAL '10 days', now() - INTERVAL '3 days'),
+  ('44444444-4444-4444-4444-444444444003', 'COT-003', '11111111-1111-1111-1111-111111111003', '617ad322-4e0a-4252-87cd-9707d355e32b', 216000.00, 'pendiente', '', NULL, now() - INTERVAL '1 day', now() - INTERVAL '1 day'),
+  ('44444444-4444-4444-4444-444444444004', 'COT-004', '11111111-1111-1111-1111-111111111001', '617ad322-4e0a-4252-87cd-9707d355e32b', 180000.00, 'rechazada', 'Cliente solicitó descuento que no fue aprobado.', NULL, now() - INTERVAL '15 days', now() - INTERVAL '12 days');
 
 -- ===========================
 -- Quotation Lines
@@ -101,9 +101,9 @@ INSERT INTO quotation_lines (id, quotation_id, product_id, variant_id, quantity,
 -- Orders
 -- ===========================
 INSERT INTO orders (id, number, client_id, seller_id, total, status, notes, due_date, quotation_id, created_at, updated_at) VALUES
-  ('66666666-6666-6666-6666-666666666001', 'PED-001', '11111111-1111-1111-1111-111111111002', '00000000-0000-0000-0000-000000000002', 250000.00, 'activo', 'Pedido urgente.', (CURRENT_DATE + INTERVAL '1 day')::DATE, NULL, now() - INTERVAL '7 days', now() - INTERVAL '7 days'),
-  ('66666666-6666-6666-6666-666666666002', 'PED-002', '11111111-1111-1111-1111-111111111001', '00000000-0000-0000-0000-000000000002', 180000.00, 'activo', 'Fecha de entrega ya pasada — requiere atención.', (CURRENT_DATE - INTERVAL '3 days')::DATE, NULL, now() - INTERVAL '14 days', now() - INTERVAL '14 days'),
-  ('66666666-6666-6666-6666-666666666003', 'PED-003', '11111111-1111-1111-1111-111111111003', '00000000-0000-0000-0000-000000000001', 173000.00, 'entregado', 'Entregado sin observaciones.', (CURRENT_DATE - INTERVAL '1 day')::DATE, '44444444-4444-4444-4444-444444444002', now() - INTERVAL '20 days', now() - INTERVAL '1 day');
+  ('66666666-6666-6666-6666-666666666001', 'PED-001', '11111111-1111-1111-1111-111111111002', 'e107e456-dd85-40d6-933f-dede04c0a4ab', 250000.00, 'activo', 'Pedido urgente.', (CURRENT_DATE + INTERVAL '1 day')::DATE, NULL, now() - INTERVAL '7 days', now() - INTERVAL '7 days'),
+  ('66666666-6666-6666-6666-666666666002', 'PED-002', '11111111-1111-1111-1111-111111111001', 'e107e456-dd85-40d6-933f-dede04c0a4ab', 180000.00, 'activo', 'Fecha de entrega ya pasada — requiere atención.', (CURRENT_DATE - INTERVAL '3 days')::DATE, NULL, now() - INTERVAL '14 days', now() - INTERVAL '14 days'),
+  ('66666666-6666-6666-6666-666666666003', 'PED-003', '11111111-1111-1111-1111-111111111003', '617ad322-4e0a-4252-87cd-9707d355e32b', 173000.00, 'entregado', 'Entregado sin observaciones.', (CURRENT_DATE - INTERVAL '1 day')::DATE, '44444444-4444-4444-4444-444444444002', now() - INTERVAL '20 days', now() - INTERVAL '1 day');
 
 -- ===========================
 -- Order Lines

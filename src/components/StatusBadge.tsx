@@ -24,7 +24,6 @@ function resolveStatus(status: string): StatusType {
     case 'pendiente':
       return 'pending';
     case 'entregado':
-    case 'borrador':
       return 'completed';
     case 'rechazada':
       return 'critical';

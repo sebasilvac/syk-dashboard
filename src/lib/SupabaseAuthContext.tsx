@@ -2,8 +2,9 @@ import { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import type { AuthError } from '@supabase/supabase-js';
 import type { User, Role } from '@/types/models';
-import type { SupabaseAuthState, SupabaseAuthContextValue } from '@/types/auth';
+import type { SupabaseAuthState, SupabaseAuthContextValue, AuthContextValue } from '@/types/auth';
 import { supabase } from '@/lib/supabase';
+import { AuthContext } from '@/lib/AuthContext';
 
 export const SupabaseAuthContext = createContext<SupabaseAuthContextValue | null>(null);
 
@@ -74,22 +75,40 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = useCallback(async (email: string, password: string): Promise<{ error: string | null }> => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       return { error: sanitizeAuthError(error) };
+    }
+    // Update state immediately so the redirect triggers without waiting for the listener
+    if (data.user) {
+      setState({
+        user: mapSupabaseUser(data.user),
+        isAuthenticated: true,
+        loading: false,
+      });
     }
     return { error: null };
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
+    setState({ user: null, isAuthenticated: false, loading: false });
     await supabase.auth.signOut();
   }, []);
 
   const value: SupabaseAuthContextValue = { state, login, logout };
 
+  // Also provide the generic AuthContext so useAuth() works app-wide
+  const genericAuthValue: AuthContextValue = {
+    state: { user: state.user, isAuthenticated: state.isAuthenticated, loading: state.loading },
+    login: (_role: Role) => { /* no-op in Supabase mode, use email/password login */ },
+    logout: () => { logout(); },
+  };
+
   return (
     <SupabaseAuthContext.Provider value={value}>
-      {children}
+      <AuthContext.Provider value={genericAuthValue}>
+        {children}
+      </AuthContext.Provider>
     </SupabaseAuthContext.Provider>
   );
 }

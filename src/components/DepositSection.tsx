@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Order, Deposit } from '@/types/models';
 import { calculatePendingBalance } from '@/lib/depositValidation';
+import { parseLocalDate } from '@/lib/computeAlerts';
 import { DepositForm } from '@/components/DepositForm';
 import { Button } from '@/components/Button';
 
@@ -28,7 +29,7 @@ export function DepositSection({ order, onAdd, onRemove, isDelivered }: DepositS
   }
 
   function formatDate(dateStr: string): string {
-    const date = new Date(dateStr + 'T00:00:00');
+    const date = parseLocalDate(dateStr);
     return date.toLocaleDateString('es-MX', {
       year: 'numeric',
       month: 'short',

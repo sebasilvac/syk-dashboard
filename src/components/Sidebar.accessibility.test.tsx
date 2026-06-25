@@ -15,6 +15,7 @@ const mockAuthValue: AuthContextValue = {
   state: {
     user: { id: '1', name: 'Test User', role: 'admin' },
     isAuthenticated: true,
+    loading: false,
   },
   login: vi.fn(),
   logout: vi.fn(),

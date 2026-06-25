@@ -12,7 +12,6 @@ import type { Column } from '@/components/DataTable';
 import type { Quotation } from '@/types/models';
 
 const STATUS_OPTIONS = [
-  { value: 'borrador', label: 'Borrador' },
   { value: 'pendiente', label: 'Pendiente' },
   { value: 'aprobada', label: 'Aprobada' },
   { value: 'rechazada', label: 'Rechazada' },
@@ -47,8 +46,16 @@ export default function QuotationListPage() {
     },
     {
       key: 'createdAt',
-      header: 'Fecha',
+      header: 'Fecha Creación',
       render: (q) => new Date(q.createdAt).toLocaleDateString('es-CL'),
+    },
+    {
+      key: 'estimatedDeliveryDate',
+      header: 'Entrega Estimada',
+      render: (q) =>
+        q.estimatedDeliveryDate
+          ? new Date(q.estimatedDeliveryDate).toLocaleDateString('es-CL')
+          : '—',
     },
     {
       key: 'status',

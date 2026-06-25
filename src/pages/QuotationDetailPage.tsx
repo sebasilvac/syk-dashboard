@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/lib/DataContext';
 import { useAuth } from '@/hooks/useAuth';
+import { parseLocalDate } from '@/lib/computeAlerts';
 import { RoleGate } from '@/components/RoleGate';
 import { StatusBadge } from '@/components/StatusBadge';
 import { DataTable } from '@/components/DataTable';
@@ -134,7 +135,7 @@ export default function QuotationDetailPage() {
             </span>
             {quotation.estimatedDeliveryDate && (
               <span className="flex items-center gap-1">
-                Entrega estimada: {new Date(quotation.estimatedDeliveryDate + 'T00:00:00').toLocaleDateString('es-CL')}
+                Entrega estimada: {parseLocalDate(quotation.estimatedDeliveryDate).toLocaleDateString('es-CL')}
               </span>
             )}
             <StatusBadge status={quotation.status} />

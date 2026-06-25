@@ -1,6 +1,19 @@
 import type { Alert, AppData } from '@/types/models';
 
 /**
+ * Parse a date string as local midnight.
+ * Handles both date-only strings ("2026-07-04") and full ISO timestamps.
+ * Date-only strings are parsed as local time by appending T00:00:00.
+ */
+export function parseLocalDate(dateStr: string): Date {
+  // Date-only format: "YYYY-MM-DD" (length 10, no 'T')
+  if (dateStr.length === 10 && !dateStr.includes('T')) {
+    return new Date(dateStr + 'T00:00:00');
+  }
+  return new Date(dateStr);
+}
+
+/**
  * Calculate the difference in calendar days between two dates.
  * Returns positive if target is in the future relative to from.
  */
@@ -32,7 +45,7 @@ export function computeAlerts(data: AppData, today: Date): Alert[] {
   for (const order of data.orders) {
     if (order.status !== 'activo') continue;
 
-    const daysUntilDue = diffDays(new Date(order.dueDate), today);
+    const daysUntilDue = diffDays(parseLocalDate(order.dueDate), today);
 
     if (daysUntilDue <= 0) {
       alerts.push({

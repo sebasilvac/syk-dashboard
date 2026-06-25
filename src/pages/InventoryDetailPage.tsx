@@ -1,10 +1,12 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/lib/DataContext';
 import { RoleGate } from '@/components/RoleGate';
 import { DataTable } from '@/components/DataTable';
 import { FormField } from '@/components/FormField';
 import { Button } from '@/components/Button';
+import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { checkProductReferences, checkVariantReferences } from '@/lib/queries/products';
 import type { Column } from '@/components/DataTable';
 
 interface VariantDisplay {
@@ -42,6 +44,18 @@ export default function InventoryDetailPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [editingStock, setEditingStock] = useState<Record<string, string>>({});
+
+  // Deletion state (Tasks 8.1, 8.2, 8.3)
+  const [showDeleteProductDialog, setShowDeleteProductDialog] = useState(false);
+  const [variantToDelete, setVariantToDelete] = useState<VariantDisplay | null>(null);
+  const [deletionError, setDeletionError] = useState<string | null>(null);
+
+  // Clear deletion error after 5 seconds
+  useEffect(() => {
+    if (!deletionError) return;
+    const timer = setTimeout(() => setDeletionError(null), 5000);
+    return () => clearTimeout(timer);
+  }, [deletionError]);
 
   const variantDisplays: VariantDisplay[] = useMemo(() => {
     if (!product) return [];
@@ -123,6 +137,53 @@ export default function InventoryDetailPage() {
     }
   }
 
+  // Delete product handler
+  async function handleDeleteProduct() {
+    if (!product) return;
+    setDeletionError(null);
+
+    try {
+      const blockReason = await checkProductReferences(product.id);
+      if (blockReason) {
+        setDeletionError(blockReason.message);
+        setShowDeleteProductDialog(false);
+        return;
+      }
+      dispatch({ type: 'PRODUCT_DELETE', payload: { id: product.id } });
+      navigate('/inventario');
+    } catch {
+      setDeletionError('Error al eliminar. Intenta nuevamente.');
+      setShowDeleteProductDialog(false);
+    }
+  }
+
+  // Delete variant handler
+  async function handleDeleteVariant() {
+    if (!product || !variantToDelete) return;
+    setDeletionError(null);
+
+    // Last-variant guard
+    if (product.variants.length === 1) {
+      setDeletionError('No se puede eliminar la última variante. Elimina el producto completo en su lugar.');
+      setVariantToDelete(null);
+      return;
+    }
+
+    try {
+      const blockReason = await checkVariantReferences(variantToDelete.id);
+      if (blockReason) {
+        setDeletionError(blockReason.message);
+        setVariantToDelete(null);
+        return;
+      }
+      dispatch({ type: 'VARIANT_DELETE', payload: { productId: product.id, variantId: variantToDelete.id } });
+      setVariantToDelete(null);
+    } catch {
+      setDeletionError('Error al eliminar. Intenta nuevamente.');
+      setVariantToDelete(null);
+    }
+  }
+
   const variantColumns: Column<VariantDisplay>[] = useMemo(() => {
     const base: Column<VariantDisplay>[] = [
       { key: 'size', header: 'Talla' },
@@ -157,6 +218,34 @@ export default function InventoryDetailPage() {
         header: 'Stock Mínimo',
         render: (v) => <span className="font-mono">{v.minStock}</span>,
       },
+      {
+        key: 'actions' as keyof VariantDisplay,
+        header: 'Acciones',
+        render: (v) => (
+          <RoleGate allowedRoles={['admin']}>
+            <button
+              type="button"
+              className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-900/30 transition-colors duration-150"
+              onClick={() => setVariantToDelete(v)}
+              aria-label={`Eliminar variante ${v.size} ${v.color}`}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </RoleGate>
+        ),
+      },
     ];
     return base;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -190,10 +279,26 @@ export default function InventoryDetailPage() {
             </span>
           </div>
         </div>
-        <Button variant="ghost" onClick={() => navigate('/inventario')}>
-          Volver
-        </Button>
+        <div className="flex items-center gap-2">
+          <RoleGate allowedRoles={['admin']}>
+            <Button variant="destructive" size="sm" onClick={() => setShowDeleteProductDialog(true)}>
+              Eliminar Producto
+            </Button>
+          </RoleGate>
+          <Button variant="ghost" onClick={() => navigate('/inventario')}>
+            Volver
+          </Button>
+        </div>
       </div>
+
+      {deletionError && (
+        <div
+          className="mb-6 p-3 bg-red-900/30 border border-red-700 rounded-xl text-sm text-red-200"
+          role="alert"
+        >
+          {deletionError}
+        </div>
+      )}
 
       <h2 className="text-lg font-semibold text-text-primary mb-4">Variantes</h2>
       <DataTable
@@ -258,6 +363,36 @@ export default function InventoryDetailPage() {
           </form>
         </div>
       </RoleGate>
+
+      {/* Delete Product Confirmation Dialog */}
+      <ConfirmDialog
+        open={showDeleteProductDialog}
+        title="Eliminar Producto"
+        message={`¿Estás seguro de que deseas eliminar "${product.name}"? Todas las variantes asociadas serán eliminadas permanentemente.`}
+        variant="destructive"
+        onConfirm={handleDeleteProduct}
+        onCancel={() => {
+          setShowDeleteProductDialog(false);
+          setDeletionError(null);
+        }}
+      />
+
+      {/* Delete Variant Confirmation Dialog */}
+      <ConfirmDialog
+        open={variantToDelete !== null}
+        title="Eliminar Variante"
+        message={
+          variantToDelete
+            ? `¿Estás seguro de que deseas eliminar la variante "${variantToDelete.size} - ${variantToDelete.color}"?`
+            : ''
+        }
+        variant="destructive"
+        onConfirm={handleDeleteVariant}
+        onCancel={() => {
+          setVariantToDelete(null);
+          setDeletionError(null);
+        }}
+      />
     </div>
   );
 }

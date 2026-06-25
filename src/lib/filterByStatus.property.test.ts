@@ -12,7 +12,7 @@ import { filterByStatus } from '@/lib/filterByStatus';
  * **Validates: Requirements 4.2, 7.4**
  */
 describe('Feature: syk-dashboard-ui, Property 2: Filtrado por estado retorna solo elementos coincidentes', () => {
-  const arbQuotationStatus = fc.constantFrom('borrador', 'pendiente', 'aprobada', 'rechazada');
+  const arbQuotationStatus = fc.constantFrom('pendiente', 'aprobada', 'rechazada');
 
   const arbItem = fc.record({
     id: fc.uuid(),

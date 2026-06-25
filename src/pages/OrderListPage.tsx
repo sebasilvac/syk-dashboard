@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDataScope } from '@/hooks/useDataScope';
 import { filterByStatus } from '@/lib/filterByStatus';
+import { parseLocalDate } from '@/lib/computeAlerts';
 import { DataTable } from '@/components/DataTable';
 import { StatusFilter } from '@/components/StatusFilter';
 import { StatusBadge } from '@/components/StatusBadge';
@@ -50,7 +51,7 @@ export default function OrderListPage() {
       header: 'Fecha Entrega',
       render: (o) => (
         <span className="flex items-center gap-1">
-          {new Date(o.dueDate).toLocaleDateString('es-CL')}
+          {parseLocalDate(o.dueDate).toLocaleDateString('es-CL')}
           {o.status === 'activo' && <DueDateIndicator dueDate={o.dueDate} />}
         </span>
       ),

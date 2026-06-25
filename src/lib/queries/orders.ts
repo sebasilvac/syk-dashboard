@@ -59,10 +59,18 @@ export async function getOrders(
 export async function createOrder(
   order: Omit<Order, 'id' | 'createdAt' | 'updatedAt' | 'deposits'>
 ): Promise<Order> {
+  // Get current user session to ensure seller_id matches auth.uid()
+  const { data: sessionData } = await supabase.auth.getSession();
+  const currentUserId = sessionData.session?.user.id;
+  const sellerId = currentUserId ?? order.sellerId;
+
+  // Generate a unique number if not provided
+  const number = order.number || `PED-${Date.now().toString(36).toUpperCase()}`;
+
   const insertPayload: OrderInsert = {
-    number: order.number,
+    number,
     client_id: order.clientId,
-    seller_id: order.sellerId,
+    seller_id: sellerId,
     total: order.total,
     status: order.status,
     notes: order.notes,

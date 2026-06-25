@@ -3,12 +3,13 @@ import type { ReactNode } from 'react';
 import type { AppData } from '@/types/models';
 import type { DataAction } from '@/types/actions';
 import { DataContext } from '@/lib/DataContext';
+import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
 import { useClients } from '@/hooks/useClients';
 import { useProducts } from '@/hooks/useProducts';
 import { useQuotations } from '@/hooks/useQuotations';
 import { useOrders } from '@/hooks/useOrders';
 
-export function SupabaseDataProvider({ children }: { children: ReactNode }) {
+function AuthenticatedDataProvider({ children }: { children: ReactNode }) {
   const clientsHook = useClients();
   const productsHook = useProducts();
   const quotationsHook = useQuotations();
@@ -90,6 +91,22 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           );
           break;
 
+        case 'PRODUCT_CREATE':
+          productsHook.createProduct(
+            action.payload.name,
+            action.payload.category,
+            action.payload.variants
+          );
+          break;
+
+        case 'PRODUCT_DELETE':
+          productsHook.deleteProduct(action.payload.id);
+          break;
+
+        case 'VARIANT_DELETE':
+          productsHook.deleteVariant(action.payload.productId, action.payload.variantId);
+          break;
+
         case 'DEPOSIT_ADD':
           ordersHook.addDeposit(action.payload.orderId, action.payload.deposit);
           break;
@@ -112,4 +129,27 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       {children}
     </DataContext.Provider>
   );
+}
+
+const emptyData: AppData = {
+  clients: [],
+  products: [],
+  quotations: [],
+  orders: [],
+};
+
+const noopDispatch = () => {};
+
+export function SupabaseDataProvider({ children }: { children: ReactNode }) {
+  const { state } = useSupabaseAuth();
+
+  if (!state.isAuthenticated) {
+    return (
+      <DataContext.Provider value={{ data: emptyData, dispatch: noopDispatch }}>
+        {children}
+      </DataContext.Provider>
+    );
+  }
+
+  return <AuthenticatedDataProvider>{children}</AuthenticatedDataProvider>;
 }
