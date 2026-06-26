@@ -5,9 +5,11 @@ import { useAuth } from '@/hooks/useAuth';
 import { calculateSubtotal, calculateDocumentTotal } from '@/lib/calculateTotals';
 import { validateOrderForm } from '@/lib/formValidation';
 import { validateStockAvailability } from '@/lib/stockValidation';
-import { Select } from '@/components/Select';
-import { FormField } from '@/components/FormField';
-import { Button } from '@/components/Button';
+import { Select } from '@/design-system/components/Select';
+import { FormField } from '@/design-system/components/FormField';
+import { Button } from '@/design-system/components/Button';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 import type { ValidationError } from '@/lib/formValidation';
 import type { StockWarning } from '@/lib/stockValidation';
 
@@ -135,6 +137,8 @@ export default function OrderFormPage() {
     navigate('/pedidos');
   }
 
+  const dueDateError = errors.find((e) => e.field === 'dueDate')?.message;
+
   return (
     <div className="p-6 md:p-8 max-w-[960px]">
       <h1 className="text-2xl font-bold text-text-primary mb-6">Nuevo Pedido</h1>
@@ -164,11 +168,11 @@ export default function OrderFormPage() {
 
       <section className="mb-8">
         <h2 className="text-lg font-semibold text-text-primary mb-4 pb-2 border-b border-secondary/50">Fecha de Entrega</h2>
-        <FormField label="Fecha de entrega" htmlFor="due-date-input" error={errors.find((e) => e.field === 'dueDate')?.message}>
+        <FormField label="Fecha de entrega" htmlFor="due-date-input" error={dueDateError}>
           <input
             id="due-date-input"
             type="date"
-            className="w-full max-w-[240px] px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+            className={cn(inputVariants({ state: dueDateError ? 'error' : 'default' }), 'max-w-[240px] font-mono')}
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
@@ -208,7 +212,7 @@ export default function OrderFormPage() {
                   <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Cantidad</span>
                   <input
                     type="number"
-                    className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+                    className={cn(inputVariants({ state: 'default' }), 'font-mono')}
                     value={line.quantity}
                     onChange={(e) => updateLine(line.id, { quantity: Number(e.target.value) || 0 })}
                     min={1}
@@ -219,7 +223,7 @@ export default function OrderFormPage() {
                   <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Precio Unit.</span>
                   <input
                     type="number"
-                    className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+                    className={cn(inputVariants({ state: 'default' }), 'font-mono')}
                     value={line.unitPrice}
                     onChange={(e) => updateLine(line.id, { unitPrice: Number(e.target.value) || 0 })}
                     min={0}

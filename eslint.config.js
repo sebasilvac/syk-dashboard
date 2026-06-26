@@ -21,7 +21,25 @@ export default defineConfig([
     rules: {
       'react-refresh/only-export-components': [
         'warn',
-        { allowExportNames: ['.*Context$'], allowConstantExport: true },
+        { allowExportNames: ['.*Context'], allowConstantExport: true },
+      ],
+    },
+  },
+  {
+    files: ['src/**/*.{ts,tsx}'],
+    ignores: ['src/design-system/components/**', 'src/design-system/primitives/**'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@/design-system/primitives/*', '*/design-system/primitives/*'],
+              message:
+                'Import from @/design-system/components/ instead of using primitives directly.',
+            },
+          ],
+        },
       ],
     },
   },

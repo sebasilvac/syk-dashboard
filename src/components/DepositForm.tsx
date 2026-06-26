@@ -2,9 +2,11 @@ import { useState } from 'react';
 import type { Deposit } from '@/types/models';
 import type { ValidationError } from '@/lib/formValidation';
 import { validateDepositForm, checkDepositExcess } from '@/lib/depositValidation';
-import { FormField } from '@/components/FormField';
-import { Select } from '@/components/Select';
-import { Button } from '@/components/Button';
+import { FormField } from '@/design-system/components/FormField';
+import { Select } from '@/design-system/components/Select';
+import { Button } from '@/design-system/components/Button';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 
 interface DepositFormProps {
   pendingBalance: number;
@@ -53,14 +55,17 @@ export function DepositForm({ pendingBalance, onSave, onCancel }: DepositFormPro
     });
   }
 
+  const amountError = getFieldError('amount');
+  const dateError = getFieldError('date');
+
   return (
     <form className="flex flex-col gap-4 p-6 bg-bg-secondary border border-secondary/50 rounded-xl" onSubmit={handleSubmit}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <FormField label="Monto" error={getFieldError('amount')} htmlFor="deposit-amount">
+        <FormField label="Monto" error={amountError} htmlFor="deposit-amount">
           <input
             id="deposit-amount"
             type="number"
-            className="w-full px-4 py-2 font-sans text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 placeholder:text-secondary focus:border-accent focus:shadow-glow"
+            className={cn(inputVariants({ state: amountError ? 'error' : 'default' }))}
             value={amount}
             onChange={(e) => handleAmountChange(e.target.value)}
             placeholder="0.00"
@@ -78,11 +83,11 @@ export function DepositForm({ pendingBalance, onSave, onCancel }: DepositFormPro
           />
         </FormField>
 
-        <FormField label="Fecha" error={getFieldError('date')} htmlFor="deposit-date">
+        <FormField label="Fecha" error={dateError} htmlFor="deposit-date">
           <input
             id="deposit-date"
             type="date"
-            className="w-full px-4 py-2 font-sans text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 placeholder:text-secondary focus:border-accent focus:shadow-glow"
+            className={cn(inputVariants({ state: dateError ? 'error' : 'default' }))}
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />

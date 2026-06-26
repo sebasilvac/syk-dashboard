@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSupabaseAuth } from '@/hooks/useSupabaseAuth';
-import { Button } from '@/components/Button';
+import { Button } from '@/design-system/components/Button';
+import { Input } from '@/design-system/components/Input';
 
 export default function LoginPage() {
   const { state, login } = useSupabaseAuth();
@@ -46,37 +47,23 @@ export default function LoginPage() {
         </p>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="email" className="text-sm font-medium text-text-primary">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="px-4 py-2.5 rounded-xl border border-secondary bg-bg-primary text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
-              placeholder="tu@email.com"
-            />
-          </div>
+          <Input
+            label="Email"
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="tu@email.com"
+          />
 
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="password" className="text-sm font-medium text-text-primary">
-              Contraseña
-            </label>
-            <input
-              id="password"
-              type="password"
-              autoComplete="current-password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="px-4 py-2.5 rounded-xl border border-secondary bg-bg-primary text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition-all"
-              placeholder="••••••••"
-            />
-          </div>
+          <Input
+            label="Contraseña"
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+          />
 
           {error && (
             <p className="text-sm text-destructive bg-destructive-muted px-3 py-2 rounded-lg" role="alert">

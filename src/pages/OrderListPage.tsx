@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useDataScope } from '@/hooks/useDataScope';
 import { filterByStatus } from '@/lib/filterByStatus';
 import { parseLocalDate } from '@/lib/computeAlerts';
-import { DataTable } from '@/components/DataTable';
+import { Table } from '@/design-system/components/Table';
 import { StatusFilter } from '@/components/StatusFilter';
 import { StatusBadge } from '@/components/StatusBadge';
 import { DueDateIndicator } from '@/components/DueDateIndicator';
-import { Button } from '@/components/Button';
-import type { Column } from '@/components/DataTable';
+import { Button } from '@/design-system/components/Button';
+import type { TableColumn } from '@/design-system/components/Table';
 import type { Order } from '@/types/models';
 
 const STATUS_OPTIONS = [
@@ -30,7 +30,7 @@ export default function OrderListPage() {
     [data.clients]
   );
 
-  const columns: Column<Order>[] = [
+  const columns: TableColumn<Order>[] = [
     {
       key: 'number',
       header: 'Número',
@@ -93,7 +93,7 @@ export default function OrderListPage() {
         />
       </div>
 
-      <DataTable
+      <Table
         columns={columns}
         data={filteredOrders}
         onRowClick={handleRowClick}

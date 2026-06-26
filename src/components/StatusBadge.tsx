@@ -1,3 +1,6 @@
+import { Badge } from '@/design-system/components/Badge';
+import type { BadgeVariant } from '@/design-system/variants/badge';
+
 export type StatusType = 'active' | 'pending' | 'completed' | 'critical';
 
 export interface StatusBadgeProps {
@@ -5,11 +8,11 @@ export interface StatusBadgeProps {
   children?: React.ReactNode;
 }
 
-const statusClasses: Record<StatusType, string> = {
-  active: 'bg-success-muted text-success',
-  pending: 'bg-warning-muted text-warning',
-  completed: 'bg-secondary/30 text-text-muted',
-  critical: 'bg-destructive-muted text-destructive',
+const statusToVariant: Record<StatusType, BadgeVariant> = {
+  active: 'success',
+  pending: 'warning',
+  completed: 'default',
+  critical: 'destructive',
 };
 
 /**
@@ -28,20 +31,18 @@ function resolveStatus(status: string): StatusType {
     case 'rechazada':
       return 'critical';
     default:
-      if (status in statusClasses) return status as StatusType;
+      if (status in statusToVariant) return status as StatusType;
       return 'completed';
   }
 }
 
 export function StatusBadge({ status, children }: StatusBadgeProps) {
   const resolved = resolveStatus(status);
-  const colorClasses = statusClasses[resolved];
+  const variant = statusToVariant[resolved];
 
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${colorClasses}`}
-    >
+    <Badge variant={variant} size="sm">
       {children ?? status}
-    </span>
+    </Badge>
   );
 }

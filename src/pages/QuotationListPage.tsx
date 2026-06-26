@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { useDataScope } from '@/hooks/useDataScope';
 import { searchQuotations } from '@/lib/searchFilter';
 import { filterByStatus } from '@/lib/filterByStatus';
-import { DataTable } from '@/components/DataTable';
+import { Table } from '@/design-system/components/Table';
 import { SearchBar } from '@/components/SearchBar';
 import { StatusFilter } from '@/components/StatusFilter';
 import { StatusBadge } from '@/components/StatusBadge';
-import { Button } from '@/components/Button';
-import type { Column } from '@/components/DataTable';
+import { Button } from '@/design-system/components/Button';
+import type { TableColumn } from '@/design-system/components/Table';
 import type { Quotation } from '@/types/models';
 
 const STATUS_OPTIONS = [
@@ -33,7 +33,7 @@ export default function QuotationListPage() {
     [data.clients]
   );
 
-  const columns: Column<Quotation>[] = [
+  const columns: TableColumn<Quotation>[] = [
     {
       key: 'number',
       header: 'Número',
@@ -101,7 +101,7 @@ export default function QuotationListPage() {
         />
       </div>
 
-      <DataTable
+      <Table
         columns={columns}
         data={filteredQuotations}
         onRowClick={handleRowClick}

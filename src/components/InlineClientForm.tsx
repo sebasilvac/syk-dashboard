@@ -2,8 +2,8 @@ import { useState } from 'react';
 import type { Client } from '@/types/models';
 import type { ValidationError } from '@/lib/formValidation';
 import { validateClientForm } from '@/lib/clientValidation';
-import { FormField } from '@/components/FormField';
-import { Button } from '@/components/Button';
+import { Input } from '@/design-system/components/Input';
+import { Button } from '@/design-system/components/Button';
 
 interface InlineClientFormProps {
   onSave: (data: Omit<Client, 'id'>) => void;
@@ -59,38 +59,35 @@ export function InlineClientForm({ onSave, onCancel }: InlineClientFormProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <FormField label="Nombre" error={getFieldError('name')} htmlFor="inline-client-name">
-          <input
-            id="inline-client-name"
-            type="text"
-            className="w-full px-4 py-2 text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 focus:border-accent focus:shadow-glow placeholder:text-secondary"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Nombre del cliente"
-          />
-        </FormField>
+        <Input
+          label="Nombre"
+          error={getFieldError('name')}
+          id="inline-client-name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Nombre del cliente"
+        />
 
-        <FormField label="Email" error={getFieldError('email')} htmlFor="inline-client-email">
-          <input
-            id="inline-client-email"
-            type="email"
-            className="w-full px-4 py-2 text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 focus:border-accent focus:shadow-glow placeholder:text-secondary"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="correo@ejemplo.com"
-          />
-        </FormField>
+        <Input
+          label="Email"
+          error={getFieldError('email')}
+          id="inline-client-email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="correo@ejemplo.com"
+        />
 
-        <FormField label="Teléfono" error={getFieldError('phone')} htmlFor="inline-client-phone">
-          <input
-            id="inline-client-phone"
-            type="tel"
-            className="w-full px-4 py-2 text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 focus:border-accent focus:shadow-glow placeholder:text-secondary"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="+52 000 000 0000"
-          />
-        </FormField>
+        <Input
+          label="Teléfono"
+          error={getFieldError('phone')}
+          id="inline-client-phone"
+          type="tel"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          placeholder="+52 000 000 0000"
+        />
       </div>
 
       <div className="flex items-center justify-end gap-3">

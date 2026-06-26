@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FormField } from '@/components/FormField';
-import { Button } from '@/components/Button';
+import { Input } from '@/design-system/components/Input';
+import { FormField } from '@/design-system/components/FormField';
+import { Button } from '@/design-system/components/Button';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 import { validateProductForm } from '@/lib/productValidation';
 import type { ProductFormData } from '@/lib/productValidation';
 import type { ValidationError } from '@/lib/formValidation';
@@ -147,31 +150,25 @@ export default function ProductFormPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-8" noValidate>
         {/* Product fields */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormField label="Nombre del Producto" htmlFor="product-name" error={nameError} errorId="error-name">
-            <input
-              id="product-name"
-              type="text"
-              className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-              value={form.name}
-              onChange={(e) => handleNameChange(e.target.value)}
-              placeholder="Ej: Camiseta Básica"
-              aria-describedby={nameError ? 'error-name' : undefined}
-              aria-invalid={!!nameError}
-            />
-          </FormField>
+          <Input
+            label="Nombre del Producto"
+            id="product-name"
+            type="text"
+            error={nameError}
+            value={form.name}
+            onChange={(e) => handleNameChange(e.target.value)}
+            placeholder="Ej: Camiseta Básica"
+          />
 
-          <FormField label="Categoría" htmlFor="product-category" error={categoryError} errorId="error-category">
-            <input
-              id="product-category"
-              type="text"
-              className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-              value={form.category}
-              onChange={(e) => handleCategoryChange(e.target.value)}
-              placeholder="Ej: Ropa, Accesorios"
-              aria-describedby={categoryError ? 'error-category' : undefined}
-              aria-invalid={!!categoryError}
-            />
-          </FormField>
+          <Input
+            label="Categoría"
+            id="product-category"
+            type="text"
+            error={categoryError}
+            value={form.category}
+            onChange={(e) => handleCategoryChange(e.target.value)}
+            placeholder="Ej: Ropa, Accesorios"
+          />
         </div>
 
         {/* Variants section */}
@@ -195,54 +192,48 @@ export default function ProductFormPage() {
                 role="group"
                 aria-label={`Variante ${index + 1}`}
               >
-                <FormField label="Talla" htmlFor={`variant-size-${index}`} error={sizeError} errorId={`error-variant-size-${index}`}>
-                  <input
-                    id={`variant-size-${index}`}
-                    type="text"
-                    className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-                    value={variant.size}
-                    onChange={(e) => handleVariantChange(variant.key, 'size', e.target.value)}
-                    placeholder="Ej: M, L, XL"
-                    aria-describedby={sizeError ? `error-variant-size-${index}` : undefined}
-                    aria-invalid={!!sizeError}
-                  />
-                </FormField>
+                <Input
+                  label="Talla"
+                  id={`variant-size-${index}`}
+                  type="text"
+                  error={sizeError}
+                  value={variant.size}
+                  onChange={(e) => handleVariantChange(variant.key, 'size', e.target.value)}
+                  placeholder="Ej: M, L, XL"
+                />
 
-                <FormField label="Color" htmlFor={`variant-color-${index}`} error={colorError} errorId={`error-variant-color-${index}`}>
-                  <input
-                    id={`variant-color-${index}`}
-                    type="text"
-                    className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-                    value={variant.color}
-                    onChange={(e) => handleVariantChange(variant.key, 'color', e.target.value)}
-                    placeholder="Ej: Rojo, Azul"
-                    aria-describedby={colorError ? `error-variant-color-${index}` : undefined}
-                    aria-invalid={!!colorError}
-                  />
-                </FormField>
+                <Input
+                  label="Color"
+                  id={`variant-color-${index}`}
+                  type="text"
+                  error={colorError}
+                  value={variant.color}
+                  onChange={(e) => handleVariantChange(variant.key, 'color', e.target.value)}
+                  placeholder="Ej: Rojo, Azul"
+                />
 
-                <FormField label="Stock" htmlFor={`variant-stock-${index}`} error={stockError} errorId={`error-variant-stock-${index}`}>
+                <FormField label="Stock" htmlFor={`variant-stock-${index}`} error={stockError}>
                   <input
                     id={`variant-stock-${index}`}
                     type="number"
-                    className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
+                    className={cn(inputVariants({ state: stockError ? 'error' : 'default' }))}
                     value={variant.stock}
                     onChange={(e) => handleVariantChange(variant.key, 'stock', e.target.value)}
                     min="0"
-                    aria-describedby={stockError ? `error-variant-stock-${index}` : undefined}
+                    aria-describedby={stockError ? `variant-stock-${index}-error` : undefined}
                     aria-invalid={!!stockError}
                   />
                 </FormField>
 
-                <FormField label="Stock Mínimo" htmlFor={`variant-minStock-${index}`} error={minStockError} errorId={`error-variant-minStock-${index}`}>
+                <FormField label="Stock Mínimo" htmlFor={`variant-minStock-${index}`} error={minStockError}>
                   <input
                     id={`variant-minStock-${index}`}
                     type="number"
-                    className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
+                    className={cn(inputVariants({ state: minStockError ? 'error' : 'default' }))}
                     value={variant.minStock}
                     onChange={(e) => handleVariantChange(variant.key, 'minStock', e.target.value)}
                     min="0"
-                    aria-describedby={minStockError ? `error-variant-minStock-${index}` : undefined}
+                    aria-describedby={minStockError ? `variant-minStock-${index}-error` : undefined}
                     aria-invalid={!!minStockError}
                   />
                 </FormField>

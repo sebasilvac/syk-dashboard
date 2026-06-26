@@ -4,10 +4,10 @@ import { useData } from '@/lib/DataContext';
 import { parseLocalDate } from '@/lib/computeAlerts';
 import { RoleGate } from '@/components/RoleGate';
 import { StatusBadge } from '@/components/StatusBadge';
-import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/Button';
+import { Table } from '@/design-system/components/Table';
+import { Button } from '@/design-system/components/Button';
 import { DepositSection } from '@/components/DepositSection';
-import type { Column } from '@/components/DataTable';
+import type { TableColumn } from '@/design-system/components/Table';
 import type { Deposit } from '@/types/models';
 
 interface LineDisplay {
@@ -47,7 +47,7 @@ export default function OrderDetailPage() {
     });
   }, [order, data.products]);
 
-  const lineColumns: Column<LineDisplay>[] = [
+  const lineColumns: TableColumn<LineDisplay>[] = [
     { key: 'product', header: 'Producto' },
     { key: 'variant', header: 'Variante' },
     {
@@ -138,7 +138,7 @@ export default function OrderDetailPage() {
       )}
 
       <h2 className="text-lg font-semibold text-text-primary mb-4">Productos</h2>
-      <DataTable columns={lineColumns} data={lineDisplays} emptyMessage="Sin líneas de producto" />
+      <Table columns={lineColumns} data={lineDisplays} emptyMessage="Sin líneas de producto" />
 
       <div className="flex justify-end items-center gap-4 py-4 border-t-2 border-secondary mt-4">
         <span className="text-base font-semibold text-text-primary">Total:</span>

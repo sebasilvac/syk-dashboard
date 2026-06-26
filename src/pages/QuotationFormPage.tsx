@@ -4,9 +4,11 @@ import { useData } from '@/lib/DataContext';
 import { useAuth } from '@/hooks/useAuth';
 import { calculateSubtotal, calculateDocumentTotal } from '@/lib/calculateTotals';
 import { validateQuotationForm } from '@/lib/formValidation';
-import { Select } from '@/components/Select';
-import { FormField } from '@/components/FormField';
-import { Button } from '@/components/Button';
+import { Select } from '@/design-system/components/Select';
+import { FormField } from '@/design-system/components/FormField';
+import { Button } from '@/design-system/components/Button';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 import { InlineClientForm } from '@/components/InlineClientForm';
 import type { Client } from '@/types/models';
 import type { ValidationError } from '@/lib/formValidation';
@@ -214,7 +216,7 @@ export default function QuotationFormPage() {
                 <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Cantidad</span>
                 <input
                   type="number"
-                  className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+                  className={cn(inputVariants({ state: 'default' }), 'font-mono')}
                   value={line.quantity}
                   onChange={(e) => updateLine(line.id, { quantity: Number(e.target.value) || 0 })}
                   min={1}
@@ -225,7 +227,7 @@ export default function QuotationFormPage() {
                 <span className="text-xs font-medium text-text-muted uppercase tracking-wider">Precio Unit.</span>
                 <input
                   type="number"
-                  className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+                  className={cn(inputVariants({ state: 'default' }), 'font-mono')}
                   value={line.unitPrice}
                   onChange={(e) => updateLine(line.id, { unitPrice: Number(e.target.value) || 0 })}
                   min={0}
@@ -281,7 +283,7 @@ export default function QuotationFormPage() {
           <input
             id="estimated-delivery-date"
             type="date"
-            className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
+            className={cn(inputVariants({ state: 'default' }), 'font-mono')}
             value={estimatedDeliveryDate}
             onChange={(e) => setEstimatedDeliveryDate(e.target.value)}
           />

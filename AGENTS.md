@@ -23,7 +23,15 @@ SYK Dashboard es una aplicación web PWA tipo backoffice para gestión de cotiza
 ```
 src/
 ├── assets/        # Imágenes y SVGs estáticos
-├── components/    # Componentes UI reutilizables
+├── components/    # Componentes de negocio reutilizables (StatusBadge, ConfirmDialog, etc.)
+├── design-system/ # 🎨 Design System autocontenido (ver sección dedicada abajo)
+│   ├── primitives/  # Componentes HTML base (uso interno exclusivo)
+│   ├── components/  # Wrappers con API pública (Button, Input, Card, Modal, etc.)
+│   ├── tokens/      # Valores de diseño (spacing, typography, radius, shadows, zIndex)
+│   ├── variants/    # Configuraciones de variantes por componente (cva)
+│   ├── utils/       # Utilidades (cn, cva)
+│   ├── index.ts     # Barrel export principal
+│   └── README.md    # Documentación de uso e instalación
 ├── hooks/         # Custom hooks (useAuth, useClients, useOrders, useProducts, useQuotations, useDataScope)
 ├── lib/           # Utilidades, contextos, queries Supabase, validaciones
 │   ├── queries/   # Funciones de consulta a Supabase por entidad (clients, orders, products, quotations, shared)
@@ -55,7 +63,7 @@ pnpm db:types     # Generar tipos TS desde Supabase (requiere SUPABASE_PROJECT_I
 
 ## Convenciones de Código
 
-- **Path alias**: usar `@/` para importar desde `src/`. Ejemplo: `import { Button } from '@/components/Button'`
+- **Path alias**: usar `@/` para importar desde `src/`. Ejemplo: `import { Button } from '@/design-system/components/Button'`
 - **Exports**: preferir named exports. Default exports solo para páginas (lazy loading)
 - **Componentes**: declarar con `function`, no arrow functions. Props interface exportada junto al componente
 - **TypeScript**: modo strict, sin `any`, tipos explícitos. `noUncheckedIndexedAccess` habilitado, `verbatimModuleSyntax` activo
@@ -215,17 +223,68 @@ Tipografía:
 
 Sombras custom: `soft`, `elevated`, `glow`
 
+## Design System (`src/design-system/`)
+
+El proyecto cuenta con un **design system autocontenido** ubicado en `src/design-system/`. Todo componente UI visible debe usar exclusivamente los componentes de este sistema.
+
+### Componentes disponibles
+
+| Componente | Import | Uso |
+|------------|--------|-----|
+| `Button` | `@/design-system/components/Button` | Botones con variant/size/loading |
+| `Input` | `@/design-system/components/Input` | Inputs con label, error, auto-id |
+| `Select` | `@/design-system/components/Select` | Dropdown custom con keyboard nav |
+| `Card` | `@/design-system/components/Card` | Contenedores con header/footer |
+| `Modal` | `@/design-system/components/Modal` | Diálogos modales con focus trap |
+| `Badge` | `@/design-system/components/Badge` | Indicadores de estado |
+| `Tabs` | `@/design-system/components/Tabs` | Tabs con ARIA y keyboard nav |
+| `Table` | `@/design-system/components/Table` | Tablas de datos tipadas |
+| `FormField` | `@/design-system/components/FormField` | Wrapper label + error para forms |
+
+### Reglas obligatorias
+
+1. **SIEMPRE usar los componentes del design system** para UI. No crear botones, inputs, modales, selects, tablas o badges ad-hoc con HTML crudo
+2. **Importar desde `@/design-system/components/`**, nunca desde `@/design-system/primitives/` (uso interno)
+3. **Para utilidades de clase CSS**: usar `cn()` de `@/design-system/utils/cn` (no concatenar strings manualmente)
+4. **Para variantes de componente**: usar `cva()` de `@/design-system/utils/cva` (no crear Record maps manuales)
+
+### Crear un componente nuevo en el design system
+
+Si se necesita un componente que **no existe**, crearlo siguiendo estos pasos:
+
+1. **Primitivo** — Crear `src/design-system/primitives/nuevo.tsx`: componente HTML mínimo con `forwardRef` y `className` prop
+2. **Variantes** — Crear `src/design-system/variants/nuevo.ts`: definir variantes con `cva()`, exportar tipos
+3. **Wrapper** — Crear `src/design-system/components/Nuevo.tsx`: importar primitivo + variantes + `cn()`, exponer API limpia con props tipadas
+4. **Barrel** — Agregar export en `src/design-system/components/index.ts`
+5. **Barrel de variantes** — Agregar export en `src/design-system/variants/index.ts`
+6. **Tests** — Crear test co-ubicado `src/design-system/components/Nuevo.test.tsx`
+
+### Lineamientos de estilo para variantes
+
+- Usar **solo clases Tailwind semánticas** que resuelvan via CSS custom properties (no hex hardcodeados, no `rgb()` literales)
+- Incluir `defaultVariants` en cada configuración `cva()`
+- Los colores de status usan: `success`, `warning`, `destructive` (cada uno con variante `-muted`)
+- Focus ring: `focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-bg-primary`
+- Border radius estándar: `rounded-xl` (componentes) o `rounded-2xl` (contenedores/cards)
+- Transiciones: `transition-all duration-150`
+
+### Documentación completa
+
+Ver `src/design-system/README.md` para instrucciones detalladas de instalación, personalización y uso en otros proyectos.
+
 ## Consideraciones para Agentes
 
 1. **Antes de modificar código**, leer los archivos relevantes y entender el patrón existente
-2. **Respetar la arquitectura**: queries en `src/lib/queries/`, hooks en `src/hooks/`, validaciones en `src/lib/`, tipos en `src/types/`
-3. **No agregar dependencias** sin justificación clara
-4. **Ejecutar `pnpm build`** después de cambios para verificar que compila
-5. **Ejecutar `pnpm test`** si se modifica lógica cubierta por tests
-6. **Idioma del código**: variables y tipos en inglés, UI y mensajes al usuario en español
-7. **No usar `any`**: TypeScript strict mode está activo con reglas estrictas
-8. **Dark mode**: todos los componentes deben soportar el tema oscuro
-9. **Imports**: usar siempre `@/` alias, nunca rutas relativas con `../`
-10. **Nuevas páginas**: deben usar `export default` y cargarse con `React.lazy()` en App.tsx
-11. **Nuevas acciones de estado**: agregar tipo en `src/types/actions.ts` y handler en `src/lib/dataReducer.ts`
-12. **Migraciones SQL**: numerar secuencialmente (siguiente: `006_*.sql`)
+2. **Usar siempre el Design System** para componentes UI: importar desde `@/design-system/components/`. Si el componente no existe, crearlo dentro de `src/design-system/` siguiendo la arquitectura (primitivo → variantes → wrapper). Ver `src/design-system/README.md` para lineamientos
+3. **Respetar la arquitectura**: queries en `src/lib/queries/`, hooks en `src/hooks/`, validaciones en `src/lib/`, tipos en `src/types/`
+4. **No agregar dependencias** sin justificación clara
+5. **Ejecutar `pnpm build`** después de cambios para verificar que compila
+6. **Ejecutar `pnpm test`** si se modifica lógica cubierta por tests
+7. **Idioma del código**: variables y tipos en inglés, UI y mensajes al usuario en español
+8. **No usar `any`**: TypeScript strict mode está activo con reglas estrictas
+9. **Dark mode**: todos los componentes deben soportar el tema oscuro
+10. **Imports**: usar siempre `@/` alias, nunca rutas relativas con `../`
+11. **Nuevas páginas**: deben usar `export default` y cargarse con `React.lazy()` en App.tsx
+12. **Nuevas acciones de estado**: agregar tipo en `src/types/actions.ts` y handler en `src/lib/dataReducer.ts`
+13. **Migraciones SQL**: numerar secuencialmente (siguiente: `006_*.sql`)
+14. **No importar desde `@/design-system/primitives/`**: son componentes internos del design system, accesibles solo desde los wrappers en `@/design-system/components/`

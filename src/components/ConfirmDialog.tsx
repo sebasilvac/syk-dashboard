@@ -1,5 +1,5 @@
-import { Modal } from '@/components/Modal';
-import { Button } from '@/components/Button';
+import { Modal } from '@/design-system/components/Modal';
+import { Button } from '@/design-system/components/Button';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -19,19 +19,25 @@ export function ConfirmDialog({
   variant = 'default',
 }: ConfirmDialogProps) {
   return (
-    <Modal open={open} onClose={onCancel} title={title}>
-      <p className="text-[0.9375rem] text-text-primary leading-relaxed mb-6">{message}</p>
-      <div className="flex items-center justify-end gap-3">
-        <Button variant="secondary" onClick={onCancel}>
-          Cancelar
-        </Button>
-        <Button
-          variant={variant === 'destructive' ? 'destructive' : 'primary'}
-          onClick={onConfirm}
-        >
-          Confirmar
-        </Button>
-      </div>
+    <Modal
+      open={open}
+      onClose={onCancel}
+      title={title}
+      footer={
+        <div className="flex items-center justify-end gap-3">
+          <Button variant="secondary" onClick={onCancel}>
+            Cancelar
+          </Button>
+          <Button
+            variant={variant === 'destructive' ? 'destructive' : 'primary'}
+            onClick={onConfirm}
+          >
+            Confirmar
+          </Button>
+        </div>
+      }
+    >
+      <p className="text-[0.9375rem] text-text-primary leading-relaxed">{message}</p>
     </Modal>
   );
 }

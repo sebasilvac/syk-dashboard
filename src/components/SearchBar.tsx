@@ -1,4 +1,6 @@
 import { useRef, useCallback } from 'react';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 
 interface SearchBarProps {
   value: string;
@@ -27,7 +29,7 @@ export function SearchBar({ value, onChange, placeholder = 'Buscar...' }: Search
   return (
     <div className="relative flex items-center w-full max-w-[400px]">
       <svg
-        className="absolute left-4 text-text-muted pointer-events-none"
+        className="absolute left-3 text-text-muted pointer-events-none"
         width="20"
         height="20"
         viewBox="0 0 24 24"
@@ -43,7 +45,10 @@ export function SearchBar({ value, onChange, placeholder = 'Buscar...' }: Search
       </svg>
       <input
         type="search"
-        className="w-full py-2 px-4 pl-11 font-sans text-sm text-text-primary bg-bg-secondary border border-secondary rounded-xl outline-none transition-all duration-150 placeholder:text-secondary focus:border-accent focus:shadow-glow [&::-webkit-search-cancel-button]:appearance-none"
+        className={cn(
+          inputVariants({ state: 'default' }),
+          'pl-10 [&::-webkit-search-cancel-button]:appearance-none'
+        )}
         defaultValue={value}
         onChange={handleChange}
         placeholder={placeholder}

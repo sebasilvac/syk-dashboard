@@ -2,12 +2,15 @@ import { useState, useMemo, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useData } from '@/lib/DataContext';
 import { RoleGate } from '@/components/RoleGate';
-import { DataTable } from '@/components/DataTable';
-import { FormField } from '@/components/FormField';
-import { Button } from '@/components/Button';
+import { Table } from '@/design-system/components/Table';
+import { FormField } from '@/design-system/components/FormField';
+import { Input } from '@/design-system/components/Input';
+import { Button } from '@/design-system/components/Button';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
 import { checkProductReferences, checkVariantReferences } from '@/lib/queries/products';
-import type { Column } from '@/components/DataTable';
+import type { TableColumn } from '@/design-system/components/Table';
 
 interface VariantDisplay {
   id: string;
@@ -184,8 +187,8 @@ export default function InventoryDetailPage() {
     }
   }
 
-  const variantColumns: Column<VariantDisplay>[] = useMemo(() => {
-    const base: Column<VariantDisplay>[] = [
+  const variantColumns: TableColumn<VariantDisplay>[] = useMemo(() => {
+    const base: TableColumn<VariantDisplay>[] = [
       { key: 'size', header: 'Talla' },
       { key: 'color', header: 'Color' },
       {
@@ -202,7 +205,10 @@ export default function InventoryDetailPage() {
           >
             <input
               type="number"
-              className={`w-20 px-2 py-1 border rounded-xl font-mono text-sm bg-bg-secondary text-text-primary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow ${v.stock <= v.minStock ? 'border-warning bg-warning-muted' : 'border-secondary'}`}
+              className={cn(
+                inputVariants({ state: v.stock <= v.minStock ? 'error' : 'default' }),
+                'w-20 font-mono'
+              )}
               value={editingStock[v.id] ?? String(v.stock)}
               onChange={(e) => handleStockEdit(v.id, e.target.value)}
               onBlur={() => handleStockCommit(v.id)}
@@ -301,7 +307,7 @@ export default function InventoryDetailPage() {
       )}
 
       <h2 className="text-lg font-semibold text-text-primary mb-4">Variantes</h2>
-      <DataTable
+      <Table
         columns={variantColumns}
         data={variantDisplays}
         emptyMessage="Este producto no tiene variantes"
@@ -311,33 +317,31 @@ export default function InventoryDetailPage() {
         <div className="mt-8 pt-6 border-t border-secondary/50">
           <h3 className="text-base font-semibold text-text-primary mb-4">Agregar Variante</h3>
           <form onSubmit={handleAddVariant} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto] gap-4 items-start">
-            <FormField label="Talla" error={errors.size} htmlFor="variant-size">
-              <input
-                id="variant-size"
-                type="text"
-                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-                value={form.size}
-                onChange={(e) => handleFormChange('size', e.target.value)}
-                placeholder="Ej: M, L, XL"
-              />
-            </FormField>
+            <Input
+              label="Talla"
+              error={errors.size}
+              id="variant-size"
+              type="text"
+              value={form.size}
+              onChange={(e) => handleFormChange('size', e.target.value)}
+              placeholder="Ej: M, L, XL"
+            />
 
-            <FormField label="Color" error={errors.color} htmlFor="variant-color">
-              <input
-                id="variant-color"
-                type="text"
-                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
-                value={form.color}
-                onChange={(e) => handleFormChange('color', e.target.value)}
-                placeholder="Ej: Rojo, Azul"
-              />
-            </FormField>
+            <Input
+              label="Color"
+              error={errors.color}
+              id="variant-color"
+              type="text"
+              value={form.color}
+              onChange={(e) => handleFormChange('color', e.target.value)}
+              placeholder="Ej: Rojo, Azul"
+            />
 
             <FormField label="Stock" htmlFor="variant-stock">
               <input
                 id="variant-stock"
                 type="number"
-                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
+                className={cn(inputVariants({ state: 'default' }))}
                 value={form.stock}
                 onChange={(e) => handleFormChange('stock', e.target.value)}
                 min="0"
@@ -348,7 +352,7 @@ export default function InventoryDetailPage() {
               <input
                 id="variant-min-stock"
                 type="number"
-                className="w-full px-4 py-2 border border-secondary rounded-xl text-sm bg-bg-secondary text-text-primary placeholder:text-secondary transition-colors duration-150 focus:outline-none focus:border-accent focus:shadow-glow"
+                className={cn(inputVariants({ state: 'default' }))}
                 value={form.minStock}
                 onChange={(e) => handleFormChange('minStock', e.target.value)}
                 min="0"

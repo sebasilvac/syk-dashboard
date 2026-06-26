@@ -3,7 +3,7 @@ import type { Order, Deposit } from '@/types/models';
 import { calculatePendingBalance } from '@/lib/depositValidation';
 import { parseLocalDate } from '@/lib/computeAlerts';
 import { DepositForm } from '@/components/DepositForm';
-import { Button } from '@/components/Button';
+import { Button } from '@/design-system/components/Button';
 
 interface DepositSectionProps {
   order: Order;

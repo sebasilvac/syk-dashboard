@@ -1,0 +1,252 @@
+# Implementation Plan: Design System
+
+## Overview
+
+Implement a layered design system abstraction over shadcn/ui for syk-dashboard. The system introduces token constants, variant configurations, utility functions (`cn`, `cva`), and wrapper components that enforce architecture isolation. Implementation follows a bottom-up approach: dependencies → utilities → tokens → variants → base components → wrappers → tests → enforcement.
+
+## Tasks
+
+- [x] 1. Install dependencies and set up project structure
+  - [x] 1.1 Install `clsx` and `tailwind-merge` as production dependencies
+    - Run `pnpm add clsx tailwind-merge`
+    - _Requirements: 14.1, 14.2_
+  - [x] 1.2 Create directory structure for the design system
+    - Create directories: `src/design-system/tokens/`, `src/design-system/variants/`, `src/design-system/utils/`
+    - Create directory: `src/lib/shadcn/`
+    - Create directory: `src/components/ui/`
+    - _Requirements: 1.4, 11.1_
+
+- [x] 2. Implement utility functions
+  - [x] 2.1 Create the `cn()` utility at `src/design-system/utils/cn.ts`
+    - Import `clsx` and `twMerge` from their respective packages
+    - Implement `cn(...inputs: ClassValue[]): string` that composes `twMerge(clsx(inputs))`
+    - Export the function as a named export
+    - _Requirements: 14.1, 14.2, 14.4_
+  - [x] 2.2 Create the `cva()` helper at `src/design-system/utils/cva.ts`
+    - Implement `VariantConfig`, `VariantProps`, and `CvaReturn` types as defined in the design
+    - Implement the `cva()` function that resolves base + variant classes + compound variants + consumer className
+    - Attach `variants` and `defaultVariants` properties to the resolver function
+    - Export `cva`, `VariantConfig`, `VariantProps`, and `CvaReturn`
+    - _Requirements: 14.3, 2.1, 2.3, 2.4_
+  - [x] 2.3 Create barrel export at `src/design-system/utils/index.ts`
+    - Re-export `cn` from `./cn` and `cva` with types from `./cva`
+    - _Requirements: 14.1, 14.3_
+
+- [x] 3. Implement the token system
+  - [x] 3.1 Create `src/design-system/tokens/spacing.ts`
+    - Define and export the `spacing` constant with keys: `xs`, `sm`, `md`, `lg`, `xl`, `2xl`
+    - Export `SpacingKey` type
+    - _Requirements: 1.1, 1.3_
+  - [x] 3.2 Create `src/design-system/tokens/typography.ts`
+    - Define and export `fontSize`, `fontWeight`, and `lineHeight` constants
+    - Export `FontSizeKey`, `FontWeightKey`, `LineHeightKey` types
+    - _Requirements: 1.1, 1.3_
+  - [x] 3.3 Create `src/design-system/tokens/radius.ts`
+    - Define and export the `radius` constant with keys: `none`, `sm`, `md`, `lg`, `xl`, `full`
+    - Export `RadiusKey` type
+    - _Requirements: 1.1, 1.3_
+  - [x] 3.4 Create `src/design-system/tokens/shadows.ts`
+    - Define and export the `shadows` constant referencing CSS custom properties
+    - Export `ShadowKey` type
+    - _Requirements: 1.1, 1.3, 12.4_
+  - [x] 3.5 Create `src/design-system/tokens/zIndex.ts`
+    - Define and export the `zIndex` constant with layering values
+    - Export `ZIndexKey` type
+    - _Requirements: 1.1, 1.3_
+  - [x] 3.6 Create barrel export at `src/design-system/tokens/index.ts`
+    - Re-export all token constants and types from individual modules
+    - _Requirements: 1.4_
+
+- [x] 4. Implement variant configurations
+  - [x] 4.1 Create `src/design-system/variants/button.ts`
+    - Define `buttonVariants` using `cva()` with `variant` (primary, secondary, destructive, ghost) and `size` (sm, md, lg) axes
+    - Set default variants: variant=primary, size=md
+    - Export `buttonVariants`, `ButtonVariant`, and `ButtonSize` types
+    - _Requirements: 2.1, 2.4, 3.2, 3.3, 3.7, 3.8_
+  - [x] 4.2 Create `src/design-system/variants/badge.ts`
+    - Define `badgeVariants` using `cva()` with `variant` (default, success, warning, destructive, outline) and `size` (sm, md) axes
+    - Export `badgeVariants`, `BadgeVariant`, and `BadgeSize` types
+    - _Requirements: 2.1, 2.4, 7.2, 7.3, 7.4_
+  - [x] 4.3 Create `src/design-system/variants/card.ts`
+    - Define `cardVariants` using `cva()` with `variant` (default, elevated, outlined) axis
+    - Export `cardVariants` and `CardVariant` type
+    - _Requirements: 2.1, 2.4, 5.2_
+  - [x] 4.4 Create `src/design-system/variants/modal.ts`
+    - Define `modalVariants` using `cva()` with `size` (sm, md, lg) axis
+    - Export `modalVariants` and `ModalSize` type
+    - _Requirements: 2.1, 2.4, 6.2_
+  - [x] 4.5 Create remaining variant files: `input.ts`, `tabs.ts`, `table.ts`
+    - Define variant configurations for Input, Tabs, and Table components
+    - Export types for each
+    - _Requirements: 2.1_
+  - [x] 4.6 Create barrel export at `src/design-system/variants/index.ts`
+    - Re-export all variant configs and types from individual modules
+    - _Requirements: 2.1_
+
+- [x] 5. Create top-level design system barrel export
+  - [x] 5.1 Create `src/design-system/index.ts`
+    - Re-export from `./tokens`, `./variants`, and `./utils`
+    - _Requirements: 1.4, 11.5_
+
+- [x] 6. Checkpoint - Verify design system foundation compiles
+  - Ensure `pnpm build` passes with the token, variant, and utility modules. Ask the user if questions arise.
+
+- [x] 7. Set up shadcn/ui base components
+  - [x] 7.1 Create `src/lib/shadcn/button.tsx`
+    - Implement a minimal base Button component using `React.forwardRef` with Tailwind classes
+    - Export as named export
+    - _Requirements: 3.6, 11.1_
+  - [x] 7.2 Create `src/lib/shadcn/input.tsx`
+    - Implement a minimal base Input component with `forwardRef`
+    - _Requirements: 4.6, 11.1_
+  - [x] 7.3 Create `src/lib/shadcn/card.tsx`
+    - Implement base Card, CardHeader, CardContent, CardFooter sub-components
+    - _Requirements: 5.6, 11.1_
+  - [x] 7.4 Create `src/lib/shadcn/dialog.tsx`
+    - Implement base Dialog component with overlay, content, title, description, and close button
+    - Handle focus trapping, escape key, and overlay click
+    - _Requirements: 6.8, 11.1_
+  - [x] 7.5 Create `src/lib/shadcn/badge.tsx`
+    - Implement base Badge component
+    - _Requirements: 7.5, 11.1_
+  - [x] 7.6 Create `src/lib/shadcn/tabs.tsx`
+    - Implement base Tabs, TabsList, TabsTrigger, TabsContent sub-components with ARIA attributes
+    - _Requirements: 8.6, 11.1_
+  - [x] 7.7 Create `src/lib/shadcn/table.tsx`
+    - Implement base Table, TableHeader, TableBody, TableRow, TableHead, TableCell sub-components
+    - _Requirements: 9.6, 11.1_
+
+- [x] 8. Create wrapper components
+  - [x] 8.1 Create `src/components/ui/Button.tsx`
+    - Import base from `@/lib/shadcn/button` and `buttonVariants` from `@/design-system/variants/button`
+    - Implement `ButtonProps` interface with: variant, size, loading, disabled, children, type, onClick, className, aria-label
+    - Add loading spinner and `aria-busy` when loading is true
+    - Use `cn()` for class merging
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8_
+  - [x] 8.2 Create `src/components/ui/Input.tsx`
+    - Import base from `@/lib/shadcn/input`
+    - Implement `InputProps` interface with: label, error, placeholder, disabled, value, onChange, type, id, name
+    - Auto-generate ID from label when not provided
+    - Render error with `role="alert"` and `aria-describedby` linkage
+    - Apply destructive border on error
+    - _Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6_
+  - [x] 8.3 Create `src/components/ui/Card.tsx`
+    - Import base from `@/lib/shadcn/card` and `cardVariants` from `@/design-system/variants/card`
+    - Implement `CardProps` interface with: title, description, children, footer, variant, className
+    - Compose CardHeader, CardContent, CardFooter conditionally
+    - _Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6_
+  - [x] 8.4 Create `src/components/ui/Modal.tsx`
+    - Import base from `@/lib/shadcn/dialog` and `modalVariants` from `@/design-system/variants/modal`
+    - Implement `ModalProps` interface with: open, onClose, title, description, children, footer, size
+    - Set `aria-modal="true"`, `role="dialog"`, handle Escape and overlay click
+    - _Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 6.6, 6.7, 6.8_
+  - [x] 8.5 Create `src/components/ui/Badge.tsx`
+    - Import base from `@/lib/shadcn/badge` and `badgeVariants` from `@/design-system/variants/badge`
+    - Implement `BadgeProps` interface with: variant, size, children, className
+    - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
+  - [x] 8.6 Create `src/components/ui/Tabs.tsx`
+    - Import base from `@/lib/shadcn/tabs`
+    - Implement `TabsProps` and `TabDefinition` interfaces
+    - Support controlled and uncontrolled modes
+    - Wire `aria-controls` and `aria-labelledby` for each tab trigger/panel pair
+    - _Requirements: 8.1, 8.2, 8.3, 8.4, 8.5, 8.6_
+  - [x] 8.7 Create `src/components/ui/Table.tsx`
+    - Import base from `@/lib/shadcn/table`
+    - Implement generic `TableProps<T>` and `TableColumn<T>` interfaces
+    - Render headers from column definitions, support custom `render` function
+    - Display `emptyMessage` when data is empty
+    - Add interactive row support with keyboard activation when `onRowClick` is provided
+    - _Requirements: 9.1, 9.2, 9.3, 9.4, 9.5, 9.6_
+  - [x] 8.8 Create `src/components/ui/FormField.tsx`
+    - Implement `FormFieldProps` interface with: label, error, children, htmlFor, description
+    - Generate deterministic IDs for error and description elements
+    - Link error to child via `aria-describedby` using pattern `${htmlFor}-error`
+    - Display error with `role="alert"` and destructive styling
+    - _Requirements: 10.1, 10.2, 10.3, 10.4, 10.5_
+  - [x] 8.9 Create barrel export at `src/components/ui/index.ts`
+    - Re-export all wrapper components and their props/type interfaces
+    - _Requirements: 11.5_
+
+- [x] 9. Checkpoint - Verify wrapper components compile
+  - Ensure `pnpm build` passes with all wrapper components in place. Ask the user if questions arise.
+
+- [x] 10. Add property-based tests for utilities and variants
+  - [x] 10.1 Write property test for `cn()` last-wins conflict resolution
+    - Create `src/design-system/utils/cn.property.test.ts`
+    - **Property 10: cn() last-wins conflict resolution**
+    - **Validates: Requirements 14.1, 14.2**
+  - [x] 10.2 Write property test for `cn()` falsy value filtering
+    - Add test to `src/design-system/utils/cn.property.test.ts`
+    - **Property 11: cn() filters falsy values**
+    - **Validates: Requirements 14.4**
+  - [x] 10.3 Write property test for `cva()` variant resolution
+    - Create `src/design-system/utils/cva.property.test.ts`
+    - **Property 1: Compound variant resolution produces valid classes**
+    - **Validates: Requirements 2.3**
+  - [x] 10.4 Write property test for variant configs using only semantic classes
+    - Create `src/design-system/variants/variants.property.test.ts`
+    - **Property 8: Variant configs use only semantic token classes**
+    - **Validates: Requirements 12.2**
+
+- [x] 11. Add component tests for wrapper components
+  - [x] 11.1 Write component tests for Button
+    - Create `src/components/ui/Button.test.tsx`
+    - Test: renders with correct variant classes, loading state shows spinner and sets aria-busy, disabled state
+    - _Requirements: 3.1–3.8_
+  - [x] 11.2 Write component tests for Input with property test for label-to-id association
+    - Create `src/components/ui/Input.test.tsx`
+    - Test: renders label, shows error with role="alert", aria-describedby linkage, destructive border on error
+    - **Property 2: Input label-to-id association**
+    - **Validates: Requirements 4.1–4.5**
+  - [x] 11.3 Write component tests for Card
+    - Create `src/components/ui/Card.test.tsx`
+    - Test: renders title, description, footer conditionally; applies variant classes
+    - _Requirements: 5.1–5.5_
+  - [x] 11.4 Write component tests for Modal
+    - Create `src/components/ui/Modal.test.tsx`
+    - Test: renders with aria-modal and role="dialog", calls onClose on Escape and overlay click, focus trap
+    - _Requirements: 6.1–6.7_
+  - [x] 11.5 Write component tests for Badge
+    - Create `src/components/ui/Badge.test.tsx`
+    - Test: renders with correct variant and size classes, defaults to variant=default
+    - _Requirements: 7.1–7.4_
+  - [x] 11.6 Write component tests for Tabs with property tests for ARIA linkage
+    - Create `src/components/ui/Tabs.test.tsx`
+    - Test: renders correct number of triggers, controlled and uncontrolled modes, keyboard navigation
+    - **Property 3: Tabs trigger count equals tab definitions length**
+    - **Property 4: Tabs ARIA linkage correctness**
+    - **Validates: Requirements 8.1–8.5**
+  - [x] 11.7 Write component tests for Table with property tests for headers
+    - Create `src/components/ui/Table.test.tsx`
+    - Test: renders headers from columns, empty state message, custom render function, interactive rows
+    - **Property 5: Table renders headers matching column definitions**
+    - **Property 6: Table custom cell rendering**
+    - **Validates: Requirements 9.1–9.5**
+  - [x] 11.8 Write component tests for FormField with property test for aria-describedby
+    - Create `src/components/ui/FormField.test.tsx`
+    - Test: renders label, error with role="alert", description text, aria-describedby linkage
+    - **Property 7: FormField deterministic aria-describedby linkage**
+    - **Validates: Requirements 10.1–10.4**
+
+- [x] 12. Add architecture enforcement
+  - [x] 12.1 Add ESLint `no-restricted-imports` rule to prevent direct shadcn imports
+    - Modify `eslint.config.js` to add a rule restricting imports from `@/lib/shadcn/` or `src/lib/shadcn/` in all files except those in `src/components/ui/`
+    - _Requirements: 11.1, 11.2_
+  - [x] 12.2 Write a barrel export smoke test
+    - Create `src/components/ui/index.test.ts`
+    - Verify all expected components and types are re-exported from the barrel
+    - _Requirements: 11.5_
+
+- [x] 13. Final checkpoint - Ensure all tests pass
+  - Run `pnpm build` and `pnpm test` to verify everything compiles and all tests pass. Ask the user if questions arise.
+
+## Notes
+
+- Tasks marked with `*` are optional and can be skipped for faster MVP
+- Each task references specific requirements for traceability
+- Checkpoints ensure incremental validation
+- Property tests validate universal correctness properties from the design document
+- Unit/component tests validate specific examples and edge cases
+- The implementation uses TypeScript throughout, consistent with the project's existing stack
+- All imports use the `@/` path alias as per project conventions
+- Components use `function` declarations per project coding standards

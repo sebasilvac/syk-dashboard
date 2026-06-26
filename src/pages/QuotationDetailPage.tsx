@@ -5,10 +5,13 @@ import { useAuth } from '@/hooks/useAuth';
 import { parseLocalDate } from '@/lib/computeAlerts';
 import { RoleGate } from '@/components/RoleGate';
 import { StatusBadge } from '@/components/StatusBadge';
-import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/Button';
-import { Modal } from '@/components/Modal';
-import type { Column } from '@/components/DataTable';
+import { Table } from '@/design-system/components/Table';
+import { Button } from '@/design-system/components/Button';
+import { Modal } from '@/design-system/components/Modal';
+import { FormField } from '@/design-system/components/FormField';
+import { inputVariants } from '@/design-system/variants/input';
+import { cn } from '@/design-system/utils/cn';
+import type { TableColumn } from '@/design-system/components/Table';
 
 interface LineDisplay {
   id: string;
@@ -50,7 +53,7 @@ export default function QuotationDetailPage() {
     });
   }, [quotation, data.products]);
 
-  const lineColumns: Column<LineDisplay>[] = [
+  const lineColumns: TableColumn<LineDisplay>[] = [
     { key: 'product', header: 'Producto' },
     { key: 'variant', header: 'Variante' },
     {
@@ -151,7 +154,7 @@ export default function QuotationDetailPage() {
       )}
 
       <h2 className="text-lg font-semibold text-text-primary mb-4">Productos</h2>
-      <DataTable columns={lineColumns} data={lineDisplays} emptyMessage="Sin líneas de producto" />
+      <Table columns={lineColumns} data={lineDisplays} emptyMessage="Sin líneas de producto" />
 
       <div className="flex justify-end items-center gap-4 py-4 border-t-2 border-secondary mt-4">
         <span className="text-base font-semibold text-text-primary">Total:</span>
@@ -205,21 +208,15 @@ export default function QuotationDetailPage() {
           </div>
         </div>
         <div className="flex flex-col gap-2 mb-6">
-          <label className="font-medium text-sm text-text-primary" htmlFor="due-date-input">
-            Fecha de Entrega *
-          </label>
-          <input
-            id="due-date-input"
-            type="date"
-            className="w-full px-3 py-2 bg-bg-secondary border border-secondary rounded-xl font-mono text-sm text-text-primary focus:border-accent focus:shadow-glow focus:outline-none transition-all duration-150"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          {!dueDate && (
-            <span className="text-xs text-destructive">
-              La fecha de entrega es requerida
-            </span>
-          )}
+          <FormField label="Fecha de Entrega *" htmlFor="due-date-input" error={!dueDate ? 'La fecha de entrega es requerida' : undefined}>
+            <input
+              id="due-date-input"
+              type="date"
+              className={cn(inputVariants({ state: !dueDate ? 'error' : 'default' }), 'font-mono')}
+              value={dueDate}
+              onChange={(e) => setDueDate(e.target.value)}
+            />
+          </FormField>
         </div>
         <div className="flex justify-end gap-4">
           <Button variant="ghost" onClick={() => setShowOrderModal(false)}>

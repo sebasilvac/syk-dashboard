@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/Button';
+import { Button } from '@/design-system/components/Button';
 
 export default function AccessDeniedPage() {
   const navigate = useNavigate();

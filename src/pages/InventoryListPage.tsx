@@ -2,12 +2,12 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useData } from '@/lib/DataContext';
 import { searchProducts } from '@/lib/searchFilter';
-import { DataTable } from '@/components/DataTable';
+import { Table } from '@/design-system/components/Table';
 import { SearchBar } from '@/components/SearchBar';
-import { LowStockIndicator, hasLowStock } from '@/components/LowStockIndicator';
+import { LowStockIndicator } from '@/components/LowStockIndicator';
 import { RoleGate } from '@/components/RoleGate';
-import { Button } from '@/components/Button';
-import type { Column } from '@/components/DataTable';
+import { Button } from '@/design-system/components/Button';
+import type { TableColumn } from '@/design-system/components/Table';
 import type { Product } from '@/types/models';
 
 export default function InventoryListPage() {
@@ -19,7 +19,7 @@ export default function InventoryListPage() {
     return searchProducts(data.products, searchQuery);
   }, [data.products, searchQuery]);
 
-  const columns: Column<Product>[] = [
+  const columns: TableColumn<Product>[] = [
     {
       key: 'name',
       header: 'Nombre',
@@ -71,11 +71,10 @@ export default function InventoryListPage() {
         />
       </div>
 
-      <DataTable
+      <Table
         columns={columns}
         data={filteredProducts}
         onRowClick={handleRowClick}
-        rowClassName={(p) => hasLowStock(p.variants) ? 'bg-warning-muted' : ''}
         emptyMessage="No se encontraron productos"
       />
     </div>

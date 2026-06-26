@@ -1,13 +1,13 @@
 import { useState, useMemo } from 'react';
 import { useData } from '@/lib/DataContext';
 import { searchFilter } from '@/lib/searchFilter';
-import { DataTable } from '@/components/DataTable';
+import { Table } from '@/design-system/components/Table';
 import { SearchBar } from '@/components/SearchBar';
-import { Modal } from '@/components/Modal';
+import { Modal } from '@/design-system/components/Modal';
 import { ClientForm } from '@/components/ClientForm';
 import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { Button } from '@/components/Button';
-import type { Column } from '@/components/DataTable';
+import { Button } from '@/design-system/components/Button';
+import type { TableColumn } from '@/design-system/components/Table';
 import type { Client } from '@/types/models';
 
 export default function ClientListPage() {
@@ -25,7 +25,7 @@ export default function ClientListPage() {
     ]);
   }, [data.clients, searchQuery]);
 
-  const columns: Column<Client>[] = [
+  const columns: TableColumn<Client>[] = [
     { key: 'name', header: 'Nombre' },
     { key: 'email', header: 'Correo electrónico' },
     { key: 'phone', header: 'Teléfono' },
@@ -104,7 +104,7 @@ export default function ClientListPage() {
         />
       </div>
 
-      <DataTable
+      <Table
         columns={columns}
         data={filteredClients}
         emptyMessage="No se encontraron clientes"
