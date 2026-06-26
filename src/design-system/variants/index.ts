@@ -16,8 +16,22 @@ export type { InputState } from './input';
 export { tabsListVariants, tabsTriggerVariants } from './tabs';
 export type { TabsListSize, TabsTriggerState } from './tabs';
 
-export { tableVariants, tableRowVariants } from './table';
-export type { TableVariant, TableRowInteractive } from './table';
+export {
+  tableWrapperVariants,
+  tableVariants,
+  tableHeaderVariants,
+  tableHeadCellVariants,
+  tableRowVariants,
+  tableCellVariants,
+} from './table';
+export type {
+  TableWrapperVariant,
+  TableVariant,
+  TableHeaderVariant,
+  TableHeadCellAlign,
+  TableRowInteractive,
+  TableCellAlign,
+} from './table';
 
 export { selectTriggerVariants } from './select';
 export type { SelectTriggerState } from './select';

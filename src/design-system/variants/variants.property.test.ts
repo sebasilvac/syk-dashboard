@@ -5,7 +5,14 @@ import { cardVariants } from './card';
 import { modalVariants } from './modal';
 import { inputVariants } from './input';
 import { tabsListVariants, tabsTriggerVariants } from './tabs';
-import { tableVariants, tableRowVariants } from './table';
+import {
+  tableWrapperVariants,
+  tableVariants,
+  tableHeaderVariants,
+  tableHeadCellVariants,
+  tableRowVariants,
+  tableCellVariants,
+} from './table';
 
 // Feature: design-system, Property 8: Variant configs use only semantic token classes
 describe('Variant configs property tests', () => {
@@ -20,8 +27,12 @@ describe('Variant configs property tests', () => {
     { name: 'inputVariants', config: inputVariants },
     { name: 'tabsListVariants', config: tabsListVariants },
     { name: 'tabsTriggerVariants', config: tabsTriggerVariants },
+    { name: 'tableWrapperVariants', config: tableWrapperVariants },
     { name: 'tableVariants', config: tableVariants },
+    { name: 'tableHeaderVariants', config: tableHeaderVariants },
+    { name: 'tableHeadCellVariants', config: tableHeadCellVariants },
     { name: 'tableRowVariants', config: tableRowVariants },
+    { name: 'tableCellVariants', config: tableCellVariants },
   ];
 
   /**
